@@ -95,42 +95,23 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
 
 void PuzzleState::maybeAddPoint(const Point& point) {
     // TODO: use std::unordered_set
-    bool pointExists = false;
-    for (const Point& existingPoint : points) {
-        if (existingPoint == point) {
-            pointExists = true;
-            break;
-        }
-    }
-    if (!pointExists) {
+    if (std::find(points.begin(), points.end(), point) == points.end()) {
         points.push_back(point);
     }
 }
 
 void PuzzleState::maybeAddLine(const Line& line) {
     // TODO: use std::unordered_set
-    bool exists = false;
-    for (const Line& existingLine : lines) {
-        if (existingLine == line) {
-            exists = true;
-            break;
-        }
-    }
-    if (!exists) {
+    if (std::find(lines.begin(), lines.end(), line) == lines.end() &&
+        std::find(lines.begin(), lines.end(), line.opposite()) == lines.end()) {
         lines.push_back(line);
     }
 }
 
 void PuzzleState::maybeAddCircle(const Circle& circle) {
     // TODO: use std::unordered_set
-    bool exists = false;
-    for (const Circle& existingCircle : circles) {
-        if (existingCircle == circle) {
-            exists = true;
-            break;
-        }
-    }
-    if (!exists) {
+    if (std::find(circles.begin(), circles.end(), circle) == circles.end() &&
+        std::find(circles.begin(), circles.end(), circle.opposite()) == circles.end()) {
         circles.push_back(circle);
     }
 }

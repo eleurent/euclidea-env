@@ -8,9 +8,15 @@ TEST(PuzzleSolutions, Alpha1Test) {
     ASSERT_EQ(puzzle.cost(), 3);
     Point C(0.5, sqrt(3)/2);
 
+    auto& actions = puzzle.availableActions();
+    ASSERT_EQ(actions.size(), 2);  // two circles
+
     // First circle
     puzzle.state.drawCircle(puzzle.state.points[0], puzzle.state.points[1]);
     ASSERT_EQ(puzzle.cost(), 3);
+    actions = puzzle.availableActions();
+    ASSERT_EQ(actions.size(), 4); // 2 circles centered on B, 2 centered on D
+
 
     // Second circle
     puzzle.state.drawCircle(puzzle.state.points[1], puzzle.state.points[0]);
