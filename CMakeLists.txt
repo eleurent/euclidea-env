@@ -12,10 +12,7 @@ target_link_libraries(euclidea-env PRIVATE CGAL::CGAL)
 enable_testing()
 find_package(GTest 1.14.0 CONFIG REQUIRED)
 include(GoogleTest)
-
-add_executable(PuzzleState_test src/PuzzleState_test.cpp)
-
-target_link_libraries(PuzzleState_test PRIVATE GTest::gtest_main)
+add_executable(PuzzleState_test src/PuzzleState.cpp src/PuzzleState_test.cpp)
+target_link_libraries(PuzzleState_test PRIVATE GTest::gtest_main CGAL::CGAL)
 gtest_add_tests(TARGET PuzzleState_test TEST_PREFIX old:)
 gtest_discover_tests(PuzzleState_test TEST_PREFIX new:)
-# add_test(NAME monolithic COMMAND PuzzleState_test)
