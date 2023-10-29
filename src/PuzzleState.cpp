@@ -45,15 +45,23 @@ bool PuzzleState::findCircleLineIntersections(const Circle& circle, const Line& 
     std::vector<CGAL::Object> intersections;
     CGAL::intersection(circle, line, std::back_inserter(intersections));
 
-    if (!intersections.empty()) {
-        if (const std::pair<Circular_arc_point, unsigned>* pair = CGAL::object_cast<std::pair<Circular_arc_point, unsigned>>(&intersections.front())) {
-            intersection1 = Point(CGAL::to_double(pair->first.x()), CGAL::to_double(pair->first.y()));
-            intersection2 = Point(CGAL::to_double(pair->first.x()), CGAL::to_double(pair->first.y()));
-            // Handle the multiplicity if needed
-            // pair->second contains the multiplicity
-            return true;
-        } else  {
-            return false;
+    bool foundOne = false;
+    for (const CGAL::Object& obj : intersections) {
+        if (const std::pair<Circular_arc_point, unsigned>* pair = CGAL::object_cast<std::pair<Circular_arc_point, unsigned>>(&obj)) {
+            if (pair->second == 2) {
+                intersection1 = Point(CGAL::to_double(pair->first.x()), CGAL::to_double(pair->first.y()));
+                intersection2 = intersection1;
+                return true;
+            } else {
+                // Update the intersection points based on multiplicity
+                if (!foundOne) {
+                    intersection1 = Point(CGAL::to_double(pair->first.x()), CGAL::to_double(pair->first.y()));
+                    foundOne = true;
+                } else {
+                    intersection2 = Point(CGAL::to_double(pair->first.x()), CGAL::to_double(pair->first.y()));
+                    return true;
+                }
+            }
         }
     }
     return false;
@@ -132,9 +140,7 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
 
     for (const Line& existingLine : lines) {
         Point intersection;
-        std::cout << "Comparing to " << existingLine << std::endl;
         if (findLineIntersection(newLine, existingLine, intersection)) {
-            std::cout << "Found intersection " << intersection << std::endl;
             maybeAddPoint(intersection);
         }
     }
@@ -153,7 +159,6 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
 
 
 void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
-
     const auto newCircle = createCircle(center, pointOnCircle);
 
     for (const Line& existingLine : lines) {
@@ -166,7 +171,6 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
 
     for (const Circle& existingCircle : circles) {
         Point intersection1, intersection2;
-
         if (findCircleIntersections(existingCircle, newCircle, intersection1, intersection2)) {
             maybeAddPoint(intersection1);
             maybeAddPoint(intersection2);
