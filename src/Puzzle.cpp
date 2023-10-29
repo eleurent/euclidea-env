@@ -33,7 +33,7 @@ int Puzzle::cost() const {
 std::vector<Puzzle::Action> Puzzle::availableActions() const {
     std::vector<Action> actions;
     std::vector<Line> addedLines;
-    addedLines.assign(state.lines.begin(), state.lines.end());  
+    addedLines.assign(state.lines.begin(), state.lines.end());
     for (int i = 0; i < state.points.size(); ++i) {
         for (int j = i + 1; j < state.points.size(); ++j) {
             Line line(state.points[i], state.points[j]);
@@ -60,15 +60,17 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
     return actions;
 }
 
-void Puzzle::applyAction(const Action& action) {
+Puzzle Puzzle::applyAction(const Action& action) const {
+    Puzzle puzzle(*this);
     switch (action.type) {
         case Action::DrawLine:
-            state.drawLine(action.p1, action.p2);
+            puzzle.state.drawLine(action.p1, action.p2);
             break;
         case Action::DrawCircle:
-            state.drawCircle(action.p1, action.p2);
+            puzzle.state.drawCircle(action.p1, action.p2);
             break;
     }
+    return puzzle;
 }
 
 Puzzle alpha1() {

@@ -6,7 +6,7 @@ find_package(CGAL CONFIG REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(euclidea-env src/main.cpp src/PuzzleState.cpp src/Puzzle.cpp)
+add_executable(euclidea-env src/main.cpp src/PuzzleState.cpp src/Puzzle.cpp src/Search.cpp)
 target_link_libraries(euclidea-env PRIVATE CGAL::CGAL)
 
 enable_testing()

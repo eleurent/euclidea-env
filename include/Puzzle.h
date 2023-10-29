@@ -13,10 +13,11 @@ public:
         enum ActionType { DrawLine, DrawCircle };
         ActionType type;
         Point p1, p2;
+        Action(ActionType type, Point p1, Point p2) : type(type), p1(p1), p2(p2) {}
     };
 
     std::vector<Action> availableActions() const;
-    void applyAction(const Action& action);
+    Puzzle applyAction(const Action& action) const;
 
 
 
