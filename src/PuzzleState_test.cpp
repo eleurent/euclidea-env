@@ -32,3 +32,41 @@ TEST(PuzzleStateTest, DrawLineTest) {
     ASSERT_EQ(state.lines.size(), 3);
     ASSERT_EQ(state.circles.size(), 0);
 }
+
+TEST(PuzzleStateTest, DrawCircleTest) {
+    Point A(0, 0), B(1, 0);
+    PuzzleState state({A, B}, {}, {});
+    
+    state.drawCircle(A, B);
+    ASSERT_EQ(state.points.size(), 2);
+    ASSERT_EQ(state.lines.size(), 0);
+    ASSERT_EQ(state.circles.size(), 1);
+    
+    state.drawCircle(B, A);
+    ASSERT_EQ(state.points.size(), 4);
+    ASSERT_EQ(state.lines.size(), 0);
+    ASSERT_EQ(state.circles.size(), 2);
+}
+
+TEST(PuzzleStateTest, DrawLineCircleTest) {
+    Point A(0, 0), B(1, 0), C(2, 0), D(2, 1);
+    PuzzleState state({A, B, C}, {Line(C, D)}, {Circle(A, B)});
+    ASSERT_EQ(state.points.size(), 3);
+    ASSERT_EQ(state.lines.size(), 1);
+    ASSERT_EQ(state.circles.size(), 1);
+    
+    state.drawCircle(C, B);
+    ASSERT_EQ(state.points.size(), 5);
+    ASSERT_EQ(state.lines.size(), 1);
+    ASSERT_EQ(state.circles.size(), 2);
+    
+    state.drawCircle(C, A);
+    ASSERT_EQ(state.points.size(), 9);
+    ASSERT_EQ(state.lines.size(), 1);
+    ASSERT_EQ(state.circles.size(), 3);
+    
+    state.drawLine(A, D);
+    ASSERT_EQ(state.points.size(), 14);
+    ASSERT_EQ(state.lines.size(), 2);
+    ASSERT_EQ(state.circles.size(), 3);
+}
