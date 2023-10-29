@@ -11,8 +11,10 @@ using Circle = Kernel::Circle_2;
 
 class PuzzleState {
 public:
-    PuzzleState();
     PuzzleState(const std::vector<Point>& pointsVec, const std::vector<Line>& linesVec, const std::vector<Circle>& circlesVec);
+
+    void maybeAddPoint(const Point& point);
+    void maybeAddLine(const Line& line);
     
     void drawLine(const Point& start, const Point& end);
 
