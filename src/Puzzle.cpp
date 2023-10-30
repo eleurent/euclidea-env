@@ -54,7 +54,7 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
     addedCircles.assign(state.circles.begin(), state.circles.end());  
     for (const Point& p1 : state.points) {
         for (const Point& p2 : state.points) {
-            if (CGAL::squared_distance(state.points[i], state.points[j]) < MIN_DISTANCE)
+            if (CGAL::squared_distance(p1, p2) < MIN_DISTANCE)
                 continue;
             Circle& circle = PuzzleState::createCircle(p1, p2);
             if (std::find(addedCircles.begin(), addedCircles.end(), circle) == addedCircles.end() &&
