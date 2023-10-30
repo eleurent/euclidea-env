@@ -11,7 +11,9 @@ int main()
         // alpha0_equilateral_triangle(),
         // alpha2_mediator(),
         // alpha3_midpoint(),
-        alpha4_circle_in_square(),
+        // alpha4_circle_in_square(),
+        // alpha5_diamond_in_rectangle(),
+        alpha7_inscribed_square(),
         // beta8_tangent_to_line_at_point(),
         }) {
         const int maxIterations = 2000;

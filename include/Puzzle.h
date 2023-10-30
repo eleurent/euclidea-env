@@ -5,10 +5,6 @@
 
 class Puzzle {
 public:
-    Puzzle(const PuzzleState& initialState, const PuzzleState& goalState) : state(initialState), goalState(goalState) {}
-    float cost() const;
-
-    
     struct Action {
         enum ActionType { DrawLine, DrawCircle };
         ActionType type;
@@ -17,10 +13,10 @@ public:
         bool Action::operator==(const Action& other) const;
     };
 
+    Puzzle(const PuzzleState& initialState, const PuzzleState& goalState) : state(initialState), goalState(goalState) {}
+    float cost() const;
     std::vector<Action> availableActions() const;
     Puzzle applyAction(const Action& action) const;
-
-
 
     PuzzleState state;
 private:
@@ -31,4 +27,7 @@ Puzzle alpha0_equilateral_triangle();
 Puzzle alpha2_mediator();
 Puzzle alpha3_midpoint();
 Puzzle alpha4_circle_in_square();
+Puzzle alpha5_diamond_in_rectangle();
+Puzzle alpha6_circle_centre();
+Puzzle alpha7_inscribed_square();
 Puzzle beta8_tangent_to_line_at_point();

@@ -125,6 +125,36 @@ Puzzle alpha4_circle_in_square() {
     return Puzzle(initialState, goalState);
 }
 
+Puzzle alpha5_diamond_in_rectangle() {
+    Point A(0, 0), B(2, 0), C(2, 1), D(0, 1);
+    PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
+    
+    PuzzleState tmp = initialState;
+    tmp.drawCircle(A, C);
+    tmp.drawCircle(C, A);
+    Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
+    tmp.drawLine(E, F);
+    Point G(tmp.points[tmp.points.size()-2]), H(tmp.points[tmp.points.size()-1]);
+
+    PuzzleState goalState({G, H}, {}, {Line(A, G), Line(C, H)}, {});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle alpha6_circle_centre() {
+    Point A(0, 0), B(1, 0);
+    PuzzleState initialState({}, {}, {}, {PuzzleState::createCircle(A, B)});
+    PuzzleState goalState({A}, {}, {}, {});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle alpha7_inscribed_square() {
+    Point A(0, 0), B(0, 1);
+    PuzzleState initialState({A, B}, {}, {}, {PuzzleState::createCircle(A, B)});
+    Point C(1, 0), D(0, -1), E(-1, 0);
+    PuzzleState goalState({C, D, E}, {}, {Line(B, C), Line(C, D), Line(D, E), Line(E, B)}, {});
+    return Puzzle(initialState, goalState);
+}
+
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
     Point C(0.6, 1.33), D(1.26, 0.58);
