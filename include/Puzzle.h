@@ -6,7 +6,7 @@
 class Puzzle {
 public:
     Puzzle(const PuzzleState& initialState, const PuzzleState& goalState) : state(initialState), goalState(goalState) {}
-    int cost() const;
+    float cost() const;
 
     
     struct Action {
@@ -14,6 +14,7 @@ public:
         ActionType type;
         Point p1, p2;
         Action(ActionType type, Point p1, Point p2) : type(type), p1(p1), p2(p2) {}
+        bool Action::operator==(const Action& other) const;
     };
 
     std::vector<Action> availableActions() const;

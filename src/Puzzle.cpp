@@ -3,9 +3,15 @@
 
 const float MIN_DISTANCE = 0.01f;
 
+bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
+    bool sameLine = (type == other.type == DrawLine && (Line(p1, p2) == Line(other.p1, other.p2) || Line(p1, p2) == Line(other.p1, other.p2).opposite()));
+    bool sameCircle = (type == other.type == DrawCircle && (PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2) ||
+                                                            PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2).opposite())) ;
+    return sameCircle || sameCircle;
+}
 
-int Puzzle::cost() const {
-    int missingParts = 0;
+float Puzzle::cost() const {
+    float missingParts = 0;
 
     // Check missing points
     for (const auto& goalPoint : goalState.points) {
@@ -114,8 +120,8 @@ Puzzle alpha3_midpoint() {
 Puzzle alpha4_circle_in_square() {
     Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
     PuzzleState initialState({A, B, C, D}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
-    Point E(0.5, 0.5), F(1, 0,5);
-    PuzzleState goalState({}, {}, {PuzzleState::createCircle(E, F)});
+    Point E(0.5, 0.5), F(1, 0.5), G(0, 0.5), H(0.5, 0), I(0.5, 1);
+    PuzzleState goalState({E, F, G, H, I}, {}, {PuzzleState::createCircle(E, F)});
     return Puzzle(initialState, goalState);
 }
 
