@@ -89,47 +89,47 @@ Puzzle Puzzle::applyAction(const Action& action) const {
 
 Puzzle alpha0_equilateral_triangle() {
     Point A(0, 0), B(1, 0);
-    PuzzleState initialState({A, B}, {Line(A, B)}, {});
+    PuzzleState initialState({A, B}, {Segment(A, B)}, {}, {});
 
     PuzzleState tmp = initialState;
     tmp.drawCircle(A, B);
     tmp.drawCircle(B, A);
     Point C = tmp.points.back();
 
-    PuzzleState goalState({C}, {Line(A, C), Line(B, C)}, {});
+    PuzzleState goalState({C}, {}, {Line(A, C), Line(B, C)}, {});
     return Puzzle(initialState, goalState);
 }
 
 Puzzle alpha2_mediator() {
     Point A(0, 0), B(1, 0);
-    PuzzleState initialState({A, B}, {Line(A, B)}, {});
+    PuzzleState initialState({A, B}, {Segment(A, B)}, {}, {});
     Point C(0.5, -1), D(0.5, 1);
 
-    PuzzleState goalState({}, {Line(C, D)}, {});
+    PuzzleState goalState({}, {}, {Line(C, D)}, {});
     return Puzzle(initialState, goalState);
 }
 
 Puzzle alpha3_midpoint() {
     Point A(0, 0), B(1, 0);
-    PuzzleState initialState({A, B}, {}, {});
+    PuzzleState initialState({A, B}, {}, {}, {});
     Point C(0.5, 0);
-    PuzzleState goalState({C}, {}, {});
+    PuzzleState goalState({C}, {}, {}, {});
     return Puzzle(initialState, goalState);
 }
 
 Puzzle alpha4_circle_in_square() {
     Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
-    PuzzleState initialState({A, B, C, D}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
+    PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
     Point E(0.5, 0.5), F(1, 0.5), G(0, 0.5), H(0.5, 0), I(0.5, 1);
-    PuzzleState goalState({E, F, G, H, I}, {}, {PuzzleState::createCircle(E, F)});
+    PuzzleState goalState({E, F, G, H, I}, {}, {}, {PuzzleState::createCircle(E, F)});
     return Puzzle(initialState, goalState);
 }
 
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
     Point C(0.6, 1.33), D(1.26, 0.58);
-    PuzzleState initialState({A, B, C, D}, {}, {PuzzleState::createCircle(A, B)});
+    PuzzleState initialState({A, B, C, D}, {}, {}, {PuzzleState::createCircle(A, B)});
     Point E(1, 1);
-    PuzzleState goalState({}, {Line(B, E)}, {});
+    PuzzleState goalState({}, {}, {Line(B, E)}, {});
     return Puzzle(initialState, goalState);
 }

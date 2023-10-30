@@ -49,7 +49,7 @@ TEST(PuzzleSolutions, Alpha4Test) {
     Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
     Puzzle::Action action1(Puzzle::Action::ActionType::DrawCircle, B, C);
     auto& actions = puzzle.availableActions();
-    ASSERT_EQ(actions.size(), 10);  // eight circles, two lines
+    ASSERT_EQ(actions.size(), 14);  // eight circles, six lines
     ASSERT_THAT(actions, ::testing::Contains(action1));
     puzzle = puzzle.applyAction(action1);
     ASSERT_EQ(puzzle.cost(), 6);

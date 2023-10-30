@@ -7,7 +7,7 @@ TEST(PuzzleStateTest, DrawLineTest) {
     Point E(1, 0);
     Point F(0, 1), G(2, -1);
 
-    PuzzleState state({A, B, C, D, F, G}, {}, {});
+    PuzzleState state({A, B, C, D, F, G}, {}, {}, {});
     state.drawLine(A, B);
     ASSERT_EQ(state.points.size(), 6);
     ASSERT_EQ(state.lines.size(), 1);
@@ -33,7 +33,7 @@ TEST(PuzzleStateTest, DrawLineTest) {
 
 TEST(PuzzleStateTest, DrawCircleTest) {
     Point A(0, 0), B(1, 0);
-    PuzzleState state({A, B}, {}, {});
+    PuzzleState state({A, B}, {}, {}, {});
     
     state.drawCircle(A, B);
     ASSERT_EQ(state.points.size(), 2);
@@ -48,7 +48,7 @@ TEST(PuzzleStateTest, DrawCircleTest) {
 
 TEST(PuzzleStateTest, DrawLineCircleTest) {
     Point A(0, 0), B(1, 0), C(2, 0), D(2, 1);
-    PuzzleState state({A, B, C}, {Line(C, D)}, {PuzzleState::createCircle(A, B)});
+    PuzzleState state({A, B, C}, {}, {Line(C, D)}, {PuzzleState::createCircle(A, B)});
     ASSERT_EQ(state.points.size(), 3);
     ASSERT_EQ(state.lines.size(), 1);
     ASSERT_EQ(state.circles.size(), 1);
