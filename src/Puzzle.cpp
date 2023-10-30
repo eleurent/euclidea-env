@@ -4,10 +4,10 @@
 const float MIN_DISTANCE = 0.01f;
 
 bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
-    bool sameLine = (type == other.type == DrawLine && (Line(p1, p2) == Line(other.p1, other.p2) || Line(p1, p2) == Line(other.p1, other.p2).opposite()));
-    bool sameCircle = (type == other.type == DrawCircle && (PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2) ||
-                                                            PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2).opposite())) ;
-    return sameCircle || sameCircle;
+    bool sameLine = ((type == other.type == DrawLine) && ((Line(p1, p2) == Line(other.p1, other.p2)) || (Line(p1, p2) == Line(other.p1, other.p2).opposite())));
+    bool sameCircle = ((type == other.type == DrawCircle) && ((PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2)) ||
+                                                            (PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2).opposite()))) ;
+    return sameLine || sameCircle;
 }
 
 float Puzzle::cost() const {
