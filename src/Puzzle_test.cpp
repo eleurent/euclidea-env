@@ -45,36 +45,37 @@ TEST(PuzzleSolutions, Alpha0Test) {
 TEST(PuzzleSolutions, Alpha4Test) {
     Puzzle& puzzle = alpha4_circle_in_square();
     ASSERT_EQ(puzzle.cost(), 6);
-    
-
-    auto& actions = puzzle.availableActions();
-    ASSERT_EQ(actions.size(), 10);  // eight circles, two lines
 
     Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
-
     Puzzle::Action action1(Puzzle::Action::ActionType::DrawCircle, B, C);
+    auto& actions = puzzle.availableActions();
+    ASSERT_EQ(actions.size(), 10);  // eight circles, two lines
     ASSERT_THAT(actions, ::testing::Contains(action1));
     puzzle = puzzle.applyAction(action1);
     ASSERT_EQ(puzzle.cost(), 6);
 
-    Puzzle::Action action2(Puzzle::Action::ActionType::DrawCircle, B, C);
+    Puzzle::Action action2(Puzzle::Action::ActionType::DrawCircle, C, B);
+    actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action2));
     puzzle = puzzle.applyAction(action2);
     ASSERT_EQ(puzzle.cost(), 6);
 
     Point E(0, 0.5), F(1, 0.5);
     Puzzle::Action action3(Puzzle::Action::ActionType::DrawLine, E, F);
+    actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action3));
     puzzle = puzzle.applyAction(action3);
     ASSERT_EQ(puzzle.cost(), 4);
 
     Puzzle::Action action4(Puzzle::Action::ActionType::DrawLine, A, C);
+    actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action4));
     puzzle = puzzle.applyAction(action4);
     ASSERT_EQ(puzzle.cost(), 3);
 
     Point G(0.5, 0.5);
     Puzzle::Action action5(Puzzle::Action::ActionType::DrawCircle, G, F);
+    actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action5));
     puzzle = puzzle.applyAction(action5);
     ASSERT_EQ(puzzle.cost(), 0);
