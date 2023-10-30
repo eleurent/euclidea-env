@@ -11,6 +11,9 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, int maxIterations) {
     puzzleQueue.push(bestPath);
 
     while (!puzzleQueue.empty() && ++iterations < maxIterations) {
+        if (iterations % (maxIterations / 10) == 0) {
+            std::cout << "Iteration " << iterations << " - best cost so far: " << bestCost << ", best path depth: " << bestPath.second.size() << std::endl;
+        }
         const auto puzzlePath = puzzleQueue.front();
         const Puzzle currentPuzzle = puzzlePath.first;
         Path currentPath = puzzlePath.second;
@@ -31,6 +34,46 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, int maxIterations) {
             if (bestCost == 0)
                 return bestPath;
 
+            puzzleQueue.push(newPuzzlePath);
+        }
+    }
+    return bestPath;
+}
+
+
+StatePath aStarSearch(const Puzzle& puzzle, int maxIterations) {
+    int iterations = 0;
+    std::priority_queue<StatePath, std::vector<StatePath>, CostComparator> puzzleQueue;
+    Path emptyPath = {};
+    StatePath bestPath = std::make_pair(puzzle, emptyPath);
+    float bestCost = puzzle.cost();
+    puzzleQueue.push(bestPath);
+
+    while (!puzzleQueue.empty() && ++iterations < maxIterations) {
+        if (iterations % (maxIterations / 10) == 0) {
+            std::cout << "Iteration " << iterations << " - best cost so far: " << bestCost << ", best path depth: " << bestPath.second.size() << std::endl;
+        }
+        const auto puzzlePath = puzzleQueue.top();
+        puzzleQueue.pop();
+
+        const Puzzle currentPuzzle = puzzlePath.first;
+        Path currentPath = puzzlePath.second;
+
+        std::vector<Puzzle::Action> actions = currentPuzzle.availableActions();
+        for (const Puzzle::Action& action : actions) {
+            const Puzzle childPuzzle = currentPuzzle.applyAction(action);
+            Path newPath;
+            newPath.assign(currentPath.begin(), currentPath.end());
+            newPath.push_back(action);
+            const StatePath newPuzzlePath = std::make_pair(childPuzzle, newPath);
+
+            const float newCost = childPuzzle.cost();
+            if (newCost < bestCost) {
+                bestCost = newCost;
+                bestPath = newPuzzlePath;
+            }
+            if (bestCost == 0)
+                return bestPath;
             puzzleQueue.push(newPuzzlePath);
         }
     }
