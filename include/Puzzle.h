@@ -30,3 +30,4 @@ Puzzle alpha0_equilateral_triangle();
 Puzzle alpha2_mediator();
 Puzzle alpha3_midpoint();
 Puzzle alpha4_circle_in_square();
+Puzzle beta8_tangent_to_line_at_point();

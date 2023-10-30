@@ -1,6 +1,8 @@
 #include "Puzzle.h"
 #include "PuzzleState.h"
 
+const float MIN_DISTANCE = 0.01f;
+
 
 int Puzzle::cost() const {
     int missingParts = 0;
@@ -38,6 +40,8 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
     addedLines.assign(state.lines.begin(), state.lines.end());
     for (int i = 0; i < state.points.size(); ++i) {
         for (int j = i + 1; j < state.points.size(); ++j) {
+            if (CGAL::squared_distance(state.points[i], state.points[j]) < MIN_DISTANCE)
+                continue;
             Line line(state.points[i], state.points[j]);
             if (std::find(addedLines.begin(), addedLines.end(), line) == addedLines.end() &&
                 std::find(addedLines.begin(), addedLines.end(), line.opposite()) == addedLines.end()) {
@@ -50,6 +54,8 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
     addedCircles.assign(state.circles.begin(), state.circles.end());  
     for (const Point& p1 : state.points) {
         for (const Point& p2 : state.points) {
+            if (CGAL::squared_distance(state.points[i], state.points[j]) < MIN_DISTANCE)
+                continue;
             Circle& circle = PuzzleState::createCircle(p1, p2);
             if (std::find(addedCircles.begin(), addedCircles.end(), circle) == addedCircles.end() &&
                 std::find(addedCircles.begin(), addedCircles.end(), circle.opposite()) == addedCircles.end() &&
@@ -110,5 +116,14 @@ Puzzle alpha4_circle_in_square() {
     PuzzleState initialState({A, B, C, D}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
     Point E(0.5, 0.5), F(1, 0,5);
     PuzzleState goalState({}, {}, {PuzzleState::createCircle(E, F)});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle beta8_tangent_to_line_at_point() {
+    Point A(0, 0), B(1, 0);
+    Point C(0.6, 1.33), D(1.26, 0.58);
+    PuzzleState initialState({A, B, C, D}, {}, {PuzzleState::createCircle(A, B)});
+    Point E(1, 1);
+    PuzzleState goalState({}, {Line(B, E)}, {});
     return Puzzle(initialState, goalState);
 }
