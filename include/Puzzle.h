@@ -26,4 +26,7 @@ private:
     PuzzleState goalState;
 };
 
-Puzzle alpha1();
+Puzzle alpha0_equilateral_triangle();
+Puzzle alpha2_mediator();
+Puzzle alpha3_midpoint();
+Puzzle alpha4_circle_in_square();

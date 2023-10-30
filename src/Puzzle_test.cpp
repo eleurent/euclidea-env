@@ -4,7 +4,7 @@
 #include "Puzzle.h"
 
 TEST(PuzzleSolutions, StepPuzzle) {
-    Puzzle& puzzle = alpha1();
+    Puzzle& puzzle = alpha0();
     auto& actions = puzzle.availableActions();
     ASSERT_EQ(actions.size(), 2);
     Puzzle& newPuzzle = puzzle.applyAction(actions[0]);
@@ -13,7 +13,7 @@ TEST(PuzzleSolutions, StepPuzzle) {
 
 
 TEST(PuzzleSolutions, Alpha1Test) {
-    Puzzle& puzzle = alpha1();
+    Puzzle& puzzle = alpha0();
     ASSERT_EQ(puzzle.cost(), 3);
     Point C(0.5, sqrt(3)/2);
 

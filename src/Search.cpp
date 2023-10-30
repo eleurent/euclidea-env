@@ -10,7 +10,7 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, int maxIterations) {
     float bestCost = puzzle.cost();
     puzzleQueue.push(bestPath);
 
-    while (!puzzleQueue.empty() || ++iterations < maxIterations) {
+    while (!puzzleQueue.empty() && ++iterations < maxIterations) {
         const auto puzzlePath = puzzleQueue.front();
         const Puzzle currentPuzzle = puzzlePath.first;
         Path currentPath = puzzlePath.second;

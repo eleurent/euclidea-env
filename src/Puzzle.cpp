@@ -14,14 +14,16 @@ int Puzzle::cost() const {
 
     // Check missing lines
     for (const auto& goalLine : goalState.lines) {
-        if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end()) {
+        if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end() &&
+            std::find(state.lines.begin(), state.lines.end(), goalLine.opposite()) == state.lines.end()) {
             missingParts++;
         }
     }
 
     // Check missing circles
     for (const auto& goalCircle : goalState.circles) {
-        if (std::find(state.circles.begin(), state.circles.end(), goalCircle) == state.circles.end()) {
+        if (std::find(state.circles.begin(), state.circles.end(), goalCircle) == state.circles.end() &&
+            std::find(state.circles.begin(), state.circles.end(), goalCircle.opposite()) == state.circles.end()) {
             missingParts++;
         }
     }
@@ -73,7 +75,7 @@ Puzzle Puzzle::applyAction(const Action& action) const {
     return puzzle;
 }
 
-Puzzle alpha1() {
+Puzzle alpha0_equilateral_triangle() {
     Point A(0, 0), B(1, 0);
     PuzzleState initialState({A, B}, {Line(A, B)}, {});
 
@@ -83,5 +85,30 @@ Puzzle alpha1() {
     Point C = tmp.points.back();
 
     PuzzleState goalState({C}, {Line(A, C), Line(B, C)}, {});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle alpha2_mediator() {
+    Point A(0, 0), B(1, 0);
+    PuzzleState initialState({A, B}, {Line(A, B)}, {});
+    Point C(0.5, -1), D(0.5, 1);
+
+    PuzzleState goalState({}, {Line(C, D)}, {});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle alpha3_midpoint() {
+    Point A(0, 0), B(1, 0);
+    PuzzleState initialState({A, B}, {}, {});
+    Point C(0.5, 0);
+    PuzzleState goalState({C}, {}, {});
+    return Puzzle(initialState, goalState);
+}
+
+Puzzle alpha4_circle_in_square() {
+    Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
+    PuzzleState initialState({A, B, C, D}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
+    Point E(0.5, 0.5), F(1, 0,5);
+    PuzzleState goalState({}, {}, {PuzzleState::createCircle(E, F)});
     return Puzzle(initialState, goalState);
 }
