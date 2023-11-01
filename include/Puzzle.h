@@ -36,4 +36,5 @@ Puzzle alpha5_diamond_in_rectangle();
 Puzzle alpha6_circle_centre();
 Puzzle alpha7_inscribed_square();
 Puzzle beta1_bisector();
+Puzzle beta2_bisectors_centre();
 Puzzle beta8_tangent_to_line_at_point();
