@@ -2,7 +2,7 @@
 #include "Search.h"
 
 
-StatePath breadthFirstSearch(const Puzzle& puzzle, int maxIterations) {
+StatePath breadthFirstSearch(const Puzzle& puzzle, const int maxIterations, const int maxDepth, const int optimalDepth) {
     int iterations = 0;
     std::queue<StatePath> puzzleQueue;
     Path emptyPath = {};
@@ -31,17 +31,15 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, int maxIterations) {
                 bestCost = childPuzzle.cost();
                 bestPath = newPuzzlePath;
             }
-            if (bestCost == 0)
-                return bestPath;
-
-            puzzleQueue.push(newPuzzlePath);
+            if (bestCost > 0 && newPath.size() < maxDepth)
+                puzzleQueue.push(newPuzzlePath);
         }
     }
     return bestPath;
 }
 
 
-StatePath aStarSearch(const Puzzle& puzzle, int maxIterations) {
+StatePath aStarSearch(const Puzzle& puzzle, const int maxIterations, const int maxDepth, const int optimalDepth) {
     int iterations = 0;
     std::priority_queue<StatePath, std::vector<StatePath>, CostComparator> puzzleQueue;
     Path emptyPath = {};
@@ -50,7 +48,7 @@ StatePath aStarSearch(const Puzzle& puzzle, int maxIterations) {
     puzzleQueue.push(bestPath);
 
     while (!puzzleQueue.empty() && ++iterations < maxIterations) {
-        if (iterations % (maxIterations / 10) == 0) {
+        if (iterations % (maxIterations / 20 ) == 0) {
             std::cout << "Iteration " << iterations << " - best cost so far: " << bestCost << ", best path depth: " << bestPath.second.size() << std::endl;
         }
         const auto puzzlePath = puzzleQueue.top();
@@ -72,9 +70,10 @@ StatePath aStarSearch(const Puzzle& puzzle, int maxIterations) {
                 bestCost = newCost;
                 bestPath = newPuzzlePath;
             }
-            if (bestCost == 0)
+            if (newCost == 0 && newPath.size() == optimalDepth)
                 return bestPath;
-            puzzleQueue.push(newPuzzlePath);
+            if (newCost > 0 && newPath.size() < maxDepth)
+                puzzleQueue.push(newPuzzlePath);
         }
     }
     return bestPath;

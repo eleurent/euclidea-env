@@ -13,12 +13,17 @@ public:
         bool Action::operator==(const Action& other) const;
     };
 
-    Puzzle(const PuzzleState& initialState, const PuzzleState& goalState) : state(initialState), goalState(goalState) {}
+    Puzzle(
+        const PuzzleState& initialState,
+        const PuzzleState& goalState,
+        const int optimalDepth
+    ) : state(initialState), goalState(goalState), optimalDepth(optimalDepth) {}
     float cost() const;
     std::vector<Action> availableActions() const;
     Puzzle applyAction(const Action& action) const;
 
     PuzzleState state;
+    int optimalDepth;
 private:
     PuzzleState goalState;
 };
@@ -30,4 +35,5 @@ Puzzle alpha4_circle_in_square();
 Puzzle alpha5_diamond_in_rectangle();
 Puzzle alpha6_circle_centre();
 Puzzle alpha7_inscribed_square();
+Puzzle beta1_bisector();
 Puzzle beta8_tangent_to_line_at_point();
