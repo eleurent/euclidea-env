@@ -6,9 +6,9 @@
 TEST(Puzzle, StepPuzzle) {
     Puzzle& puzzle = alpha0_equilateral_triangle();
     auto& actions = puzzle.availableActions();
-    ASSERT_EQ(actions.size(), 2);
+    ASSERT_EQ(actions.size(), 3);
     Puzzle& newPuzzle = puzzle.applyAction(actions[0]);
-    ASSERT_NE(puzzle.state.points, newPuzzle.state.points);
+    ASSERT_NE(puzzle.state.lines, newPuzzle.state.lines);
 }
 
 
@@ -18,18 +18,18 @@ TEST(PuzzleSolutions, Alpha0Test) {
     Point C(0.5, sqrt(3)/2);
 
     auto& actions = puzzle.availableActions();
-    ASSERT_EQ(actions.size(), 2);  // two circles
+    ASSERT_EQ(actions.size(), 3);  // two circles and a line
 
     // First circle
     puzzle.state.drawCircle(puzzle.state.points[0], puzzle.state.points[1]);
     ASSERT_EQ(puzzle.cost(), 3);
     actions = puzzle.availableActions();
-    ASSERT_EQ(actions.size(), 4); // 2 circles centered on B, 2 centered on D
+    ASSERT_EQ(actions.size(), 2); // one circles centered on B, one centered on D
 
 
     // Second circle
     puzzle.state.drawCircle(puzzle.state.points[1], puzzle.state.points[0]);
-    ASSERT_EQ(puzzle.state.points.size(), 6);
+    ASSERT_EQ(puzzle.state.points.size(), 4);
     ASSERT_THAT(puzzle.state.points, ::testing::Contains(C));
     ASSERT_EQ(puzzle.cost(), 2);
 
