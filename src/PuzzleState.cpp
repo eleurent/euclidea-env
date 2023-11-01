@@ -1,4 +1,5 @@
 #include "PuzzleState.h"
+#include "utils.h"
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>
 
@@ -48,12 +49,12 @@ bool PuzzleState::findLineIntersection(const Line& line1, const Segment& line2, 
     return hasIntersection && line2.has_on(intersection);
 }
 
-bool PuzzleState::findCircleIntersections(const Circle& circle, const Segment& line, std::vector<Point>& intersections) {
+bool PuzzleState::findCircleIntersections(const Circle& circle, const Segment& line, std::vector<Point>& intersections, const float maxDistance) {
     std::vector<Point> candidates;
     const bool hasIntersection = findCircleIntersections(circle, Line(line.start(), line.end()), candidates);
     for (const auto& candidate: candidates) {
-        if (line.has_on(candidate))
-        intersections.push_back(candidate);
+        if (CGAL::squared_distance(candidate, line) < maxDistance)
+            intersections.push_back(candidate);
     }
     return hasIntersection && !intersections.empty();
 }
@@ -82,11 +83,13 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
     return !intersections.empty();
 }
 
-void PuzzleState::maybeAddPoint(const Point& point) {
-    // TODO: use std::unordered_set
-    if (std::find(points.begin(), points.end(), point) == points.end()) {
-        points.push_back(point);
+void PuzzleState::maybeAddPoint(const Point& point, const float min_distance) {
+    for (const auto other: points) {
+        if (CGAL::squared_distance(point, other) < min_distance) {
+            return;
+        }
     }
+    points.push_back(point);
 }
 
 void PuzzleState::maybeAddLine(const Line& line) {
