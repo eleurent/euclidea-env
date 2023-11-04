@@ -6,6 +6,8 @@
 TEST(Puzzle, StepPuzzle) {
     Puzzle& puzzle = alpha0_equilateral_triangle();
     auto& actions = puzzle.availableActions();
+    for (auto& action: actions)
+        std::cout << action.type << " " << action.p1 << " " << action.p2 << std::endl;
     ASSERT_EQ(actions.size(), 3);
     Puzzle& newPuzzle = puzzle.applyAction(actions[0]);
     ASSERT_NE(puzzle.state.lines, newPuzzle.state.lines);

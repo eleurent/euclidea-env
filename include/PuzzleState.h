@@ -8,19 +8,15 @@
 
 class PuzzleState {
 public:
-    PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::vector<Line>& linesVec, const std::unordered_set<Circle>& circlesSet);
+    PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::unordered_set<Line>& linesSet, const std::unordered_set<Circle>& circlesSet);
     PuzzleState& operator=(const PuzzleState& rhs);
 
-    void maybeAddPoint(const Point& point);
-    void maybeAddLine(const Line& line);
-    void maybeAddCircle(const Circle& circle);
-    
     void drawLine(const Point& start, const Point& end);
     void drawCircle(const Point& center, const Point& pointOnCircle);
 
     std::unordered_set<Point> points;
     std::vector<Segment> segments;
-    std::vector<Line> lines;
+    std::unordered_set<Line> lines;
     std::unordered_set<Circle> circles;    
 private:
 

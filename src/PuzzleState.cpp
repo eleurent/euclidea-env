@@ -8,9 +8,9 @@ typedef CGAL::CK2_Intersection_traits<Kernel, Kernel::Circle_2, Kernel::Circle_2
 PuzzleState::PuzzleState(
     const std::unordered_set<Point>& pointsSet,
     const std::vector<Segment>& segmentsVec,
-    const std::vector<Line>& linesVec,
+    const std::unordered_set<Line>& linesSet,
     const std::unordered_set<Circle>& circlesSet
-) : points(pointsSet), segments(segmentsVec), lines(linesVec), circles(circlesSet) {
+) : points(pointsSet), segments(segmentsVec), lines(linesSet), circles(circlesSet) {
 }
 
 PuzzleState& PuzzleState::operator=(const PuzzleState& other) {
@@ -76,21 +76,6 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
     return !intersections.empty();
 }
 
-void PuzzleState::maybeAddPoint(const Point& point) {
-    points.insert(point);
-}
-
-void PuzzleState::maybeAddLine(const Line& line) {
-    // TODO: use std::unordered_set
-    if (std::find(lines.begin(), lines.end(), line) == lines.end() &&
-        std::find(lines.begin(), lines.end(), line.opposite()) == lines.end()) {
-        lines.push_back(line);
-    }
-}
-
-void PuzzleState::maybeAddCircle(const Circle& circle) {
-    circles.insert(circle);
-}
 
 void PuzzleState::drawLine(const Point& start, const Point& end) {
     Line newLine(start, end);
@@ -98,7 +83,7 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
     for (const Segment& existingSegment : segments) {
         Point intersection;
         if (findLineIntersection(newLine, existingSegment, intersection)) {
-            maybeAddPoint(intersection);
+            points.insert(intersection);
         }
     }
     
@@ -106,7 +91,7 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
         Point intersection;
 
         if (findLineIntersection(newLine, existingLine, intersection)) {
-            maybeAddPoint(intersection);
+            points.insert(intersection);
         }
     }
     
@@ -114,12 +99,12 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
         std::vector<Point> intersections;
         if (findCircleIntersections(existingCircle, newLine, intersections)) {
             for (const auto& intersection: intersections) {
-                maybeAddPoint(intersection);
+                points.insert(intersection);
             }
         }
     }
 
-    maybeAddLine(newLine);
+    lines.insert(newLine);
 }
 
 
@@ -130,7 +115,7 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingSegment, intersections)) {
             for (const auto& intersection: intersections) {
-                maybeAddPoint(intersection);
+                points.insert(intersection);
             }
         }
     }
@@ -139,7 +124,7 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingLine, intersections)) {
             for (const auto& intersection: intersections) {
-                maybeAddPoint(intersection);
+                points.insert(intersection);
             }
         }
     }
@@ -148,10 +133,10 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingCircle, intersections)) {
             for (const auto& intersection: intersections) {
-                maybeAddPoint(intersection);
+                points.insert(intersection);
             }
         }
     }
 
-    maybeAddCircle(newCircle);
+    circles.insert(newCircle);
 }

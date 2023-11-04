@@ -15,3 +15,11 @@ TEST(Hashing, HashPoint) {
     EXPECT_TRUE(pointSet.count(D));
     EXPECT_FALSE(pointSet.count(E));
 }
+
+TEST(Hashing, HashLine) {
+    Point A(0, 0), B(0.1, 0), C(0.00001, 0), D(0, 1);
+    const auto hasher = std::hash<Line>();
+    EXPECT_EQ(hasher(Line(A, B)), hasher(Line(B, A)));
+    EXPECT_EQ(hasher(Line(A, B)), hasher(Line(C, B)));
+    EXPECT_NE(hasher(Line(A, B)), hasher(Line(A, D)));
+}

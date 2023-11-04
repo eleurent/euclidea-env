@@ -44,24 +44,30 @@ std::ostream& operator << ( std::ostream& outs, const Circle & c )
   return outs << "[" << Point(c.center()) << ", " << c.squared_radius() << "]";
 }
 
-namespace Utils {
 
-  std::string toString(const Point point) {
-    std::ostringstream stringStream;
-    stringStream << "(" << CGAL::to_double(point.x()) << ", " << CGAL::to_double(point.y()) << ")";
-    return stringStream.str();
-  }
+bool Line::operator==(const Line& other) const {
+    return hash() == other.hash();
+}
 
-  bool find(const Point& point, const std::vector<Point>& points, const float maxDistance) {
-    // Replaces std::find
-    for (const auto other: points) {
-        if (CGAL::squared_distance(point, other) < maxDistance) {
-            return true;
-        }
+std::size_t Line::hash() const {
+    std::size_t hash_value = 0;
+    double an = CGAL::to_double(a());
+    double bn = CGAL::to_double(b());
+    double cn = CGAL::to_double(c());
+    // Canonized direction, to hash this and this.opposite()
+    if ((an < -DISTANCE_THRESHOLD) || ((std::abs(an) < DISTANCE_THRESHOLD) && (bn < -DISTANCE_THRESHOLD))) {
+      an = -an;
+      bn = -bn;
+      cn = -cn;
     }
-    return false;
-  }
+    hash_combine(hash_value, static_cast<int>(an * DISTANCE_INVERSE_THRESHOLD));
+    hash_combine(hash_value, static_cast<int>(bn * DISTANCE_INVERSE_THRESHOLD));
+    hash_combine(hash_value, static_cast<int>(cn * DISTANCE_INVERSE_THRESHOLD));
+    return hash_value;
+}
 
+
+namespace Utils {
   bool isOn(const Point& point, const Line& line, const float maxDistance) {
     // Replaces Line::has_on
     return CGAL::squared_distance(point, line) < maxDistance;

@@ -5,8 +5,7 @@
 const float MIN_DISTANCE = 0.01f;
 
 bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
-    //TODO: replace this by a custom class and whith a hash function computed based on line and its opposite
-    bool sameLine = ((type == other.type == DrawLine) && ((Line(p1, p2) == Line(other.p1, other.p2)) || (Line(p1, p2) == Line(other.p1, other.p2).opposite())));
+    bool sameLine = (type == other.type == DrawLine) && (Line(p1, p2) == Line(other.p1, other.p2));
     bool sameCircle = (type == other.type == DrawCircle) && (Circle::fromRadius(p1, p2) == Circle::fromRadius(other.p1, other.p2));
     return sameLine || sameCircle;
 }
@@ -23,9 +22,7 @@ float Puzzle::cost() const {
 
     // Check missing lines
     for (const auto& goalLine : goalState.lines) {
-        //TODO: replace this by custom class with approximate checks
-        if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end() &&
-            std::find(state.lines.begin(), state.lines.end(), goalLine.opposite()) == state.lines.end()) {
+        if (!state.lines.count(goalLine)) {
             cost++;
 
             // Add bonus for construction points (but not beyond 2 points)
@@ -63,29 +60,21 @@ float Puzzle::cost() const {
 
 std::vector<Puzzle::Action> Puzzle::availableActions() const {
     std::vector<Action> actions;
-    std::vector<Line> addedLines;
-    addedLines.assign(state.lines.begin(), state.lines.end());
-    for (const auto& point_i: state.points) {
-        for (const auto& point_j: state.points) {
-            if (CGAL::squared_distance(point_i, point_j) < MIN_DISTANCE)
-                continue;
-            Line line(point_i, point_j);
-            if (std::find(addedLines.begin(), addedLines.end(), line) == addedLines.end() &&
-                std::find(addedLines.begin(), addedLines.end(), line.opposite()) == addedLines.end()) {
-                actions.push_back({ Action::DrawLine, point_i, point_j });
-                addedLines.push_back(line);
-            }
-        }
-    }
+    std::unordered_set<Line> addedLines = state.lines;
     std::unordered_set<Circle> addedCircles = state.circles;
-    for (const Point& p1 : state.points) {
-        for (const Point& p2 : state.points) {
+    for (const auto& p1: state.points) {
+        for (const auto& p2: state.points) {
             if (CGAL::squared_distance(p1, p2) < MIN_DISTANCE)
                 continue;
-            Circle& circle = Circle::fromRadius(p1, p2);
+            Line line(p1, p2);
+            if (!addedLines.count(line)) {
+                actions.push_back({ Action::DrawLine, p1, p2 });
+                addedLines.insert(line);
+            }
+            Circle circle(Circle::fromRadius(p1, p2));
             if (!addedCircles.count(circle) && p1 != p2) {
-                addedCircles.insert(circle);
                 actions.push_back({ Action::DrawCircle, p1, p2 });
+                addedCircles.insert(circle);
             }
         }
     }
