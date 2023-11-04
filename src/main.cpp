@@ -15,6 +15,7 @@ int main()
         // alpha5_diamond_in_rectangle(),
         // alpha7_inscribed_square(),
         // beta1_bisector(),
+        // beta2_bisectors_centre(),
         beta8_tangent_to_line_at_point(),
         }) {
         const int maxIterations = 3000;

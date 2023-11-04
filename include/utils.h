@@ -40,6 +40,16 @@ std::size_t hashSet(const std::unordered_set<T>& set) {
   return hash_value;
 }
 
+template <typename T>
+std::vector<T> unorderedSetDifference(const std::unordered_set<T>& plus, const std::unordered_set<T>& minus){
+  std::vector<T> difference;
+  for (const auto& elem : plus){
+    if (!minus.count(elem))
+      difference.push_back(elem);
+  }
+  return difference;
+}
+
 
 /** Point */
 

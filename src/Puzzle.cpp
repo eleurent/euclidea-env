@@ -130,21 +130,26 @@ Puzzle alpha4_circle_in_square() {
     return Puzzle(initialState, goalState, optimalDepth);
 }
 
-// Puzzle alpha5_diamond_in_rectangle() {
-//     Point A(0, 0), B(2, 0), C(2, 1), D(0, 1);
-//     const PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
-    
-//     PuzzleState tmp = initialState;
-//     tmp.drawCircle(A, C);
-//     tmp.drawCircle(C, A);
-//     Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
-//     tmp.drawLine(E, F);
-//     Point G(tmp.points[tmp.points.size()-2]), H(tmp.points[tmp.points.size()-1]);
+Puzzle alpha5_diamond_in_rectangle() {
+    Point A(0, 0), B(2, 0), C(2, 1), D(0, 1);
+    const PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
 
-//     const PuzzleState goalState({G, H}, {}, {Line(A, G), Line(C, H)}, {});
-//     const int optimalDepth = 5;
-//     return Puzzle(initialState, goalState, optimalDepth);
-// }
+    PuzzleState tmp = initialState;
+    tmp.drawCircle(A, C);
+    std::unordered_set<Point> savedPoints = tmp.points;
+    tmp.drawCircle(C, A);
+    std::vector<Point> newPoints = unorderedSetDifference(tmp.points, savedPoints);
+    Point E(newPoints[newPoints.size()-2]), F(newPoints[newPoints.size()-1]);
+
+    savedPoints = tmp.points;
+    tmp.drawLine(E, F);
+    newPoints = unorderedSetDifference(tmp.points, savedPoints);
+    Point G(newPoints[newPoints.size()-2]), H(newPoints[newPoints.size()-1]);
+
+    const PuzzleState goalState({G, H}, {}, {Line(A, H), Line(C, G)}, {});
+    const int optimalDepth = 5;
+    return Puzzle(initialState, goalState, optimalDepth);
+}
 
 Puzzle alpha6_circle_centre() {
     Point A(0, 0), B(1, 0);
@@ -164,47 +169,54 @@ Puzzle alpha7_inscribed_square() {
 }
 
 
-// Puzzle beta1_bisector() {
-//     // TODO : requires addition of random points 
-//     Point A(0, 0), B(100, 0), C(100, 100);
-//     // We use segments instead of half-lines here
-//     const PuzzleState initialState({A}, {Segment(A, B), Segment(A, C)}, {}, {});
+Puzzle beta1_bisector() {
+    // TODO: requires addition of random points
+    // TODO: problem statement may be broken, fix me
+    Point A(0, 0), B(100, 0), C(100, 100);
+    // We use segments instead of half-lines here
+    const PuzzleState initialState({A}, {Segment(A, B), Segment(A, C)}, {}, {});
     
-//     PuzzleState tmp = initialState;
-//     tmp.drawCircle(A, Point(1, 0));
-//     Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
-//     tmp.drawCircle(E, F);
-//     tmp.drawCircle(F, E);
-//     Point H(tmp.points[tmp.points.size()-1]);
+    PuzzleState tmp = initialState;
+    std::unordered_set<Point> savedPoints = tmp.points;
+    tmp.drawCircle(A, Point(1, 0));
+    std::vector<Point> newPoints = unorderedSetDifference(tmp.points, savedPoints);
 
-//     const PuzzleState goalState({}, {}, {Line(A, H)}, {});
-//     const int optimalDepth = 4;
-//     return Puzzle(initialState, goalState, optimalDepth);
-// }
+    Point E(newPoints[newPoints.size()-2]), F(newPoints[newPoints.size()-1]);
+    tmp.drawCircle(E, F);
+    savedPoints = tmp.points;
+    tmp.drawCircle(F, E);
+    newPoints = unorderedSetDifference(tmp.points, savedPoints);
+    Point H(newPoints[newPoints.size()-1]);
 
-// Puzzle beta2_bisectors_centre() {
-//     Point A(0, 0), B(2, 0), C(0.1, 1);
-//     // We use segments instead of half-lines here
-//     const PuzzleState initialState({A, B, C}, {Segment(A, B), Segment(B, C), Segment(C, A)}, {}, {});
+    const PuzzleState goalState({}, {}, {Line(A, H)}, {});
+    const int optimalDepth = 4;
+    return Puzzle(initialState, goalState, optimalDepth);
+}
+
+Puzzle beta2_bisectors_centre() {
+    // TODO: problem statement is not finished, fix me
+    // TODO: requires bonus for 2/N helpers?
+
+    Point A(0, 0), B(2, 0), C(0.1, 1);
+    // We use segments instead of half-lines here
+    const PuzzleState initialState({A, B, C}, {Segment(A, B), Segment(B, C), Segment(C, A)}, {}, {});
     
-//     PuzzleState tmp = initialState;
-//     tmp.drawCircle(A, C);
-//     Point E(tmp.points[tmp.points.size()-1]);
-//     tmp.drawCircle(C, E);
-//     tmp.drawCircle(E, C);
-//     Point H(tmp.points[tmp.points.size()-1]);
-//     std::cout << "tmp has " << tmp.points.size() << "points" << std::endl;
-//     for (auto point: tmp.points)
-//         std::cout << CGAL::to_double(point.x()) << " " << CGAL::to_double(point.y()) << std::endl;
-
-//     std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-
-//     Line bisector1(A, H);
-
-//     const PuzzleState goalState({}, {}, {}, {});
-//     const int optimalDepth = 4;
-//     return Puzzle(initialState, goalState, optimalDepth);
-// }
+    PuzzleState tmp = initialState;
+    std::unordered_set<Point> savedPoints = tmp.points;
+    tmp.drawCircle(A, C);
+    std::vector<Point> newPoints = unorderedSetDifference(tmp.points, savedPoints);
+    Point E(newPoints[newPoints.size()-1]);
+    tmp.drawCircle(C, E);
+    savedPoints = tmp.points;
+    tmp.drawCircle(E, C);
+    newPoints = unorderedSetDifference(tmp.points, savedPoints);
+    Point H(newPoints[newPoints.size()-1]);
+    std::cout << H <<std::endl;
+    Line bisector1(A, H);
+    const PuzzleState goalState({}, {}, {}, {});
+    const int optimalDepth = 4;
+    return Puzzle(initialState, goalState, optimalDepth);
+}
 
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
