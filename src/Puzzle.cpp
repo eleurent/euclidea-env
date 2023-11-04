@@ -1,5 +1,6 @@
 #include "Puzzle.h"
 #include "PuzzleState.h"
+#include "utils.h"
 
 const float MIN_DISTANCE = 0.01f;
 
@@ -11,12 +12,12 @@ bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
 }
 
 float Puzzle::cost() const {
-    float missingParts = 0;
+    float cost = 0;
 
     // Check missing points
     for (const auto& goalPoint : goalState.points) {
-        if (std::find(state.points.begin(), state.points.end(), goalPoint) == state.points.end()) {
-            missingParts++;
+        if (Utils::find(goalPoint, state.points)) {
+            cost++;
         }
     }
 
@@ -24,7 +25,7 @@ float Puzzle::cost() const {
     for (const auto& goalLine : goalState.lines) {
         if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end() &&
             std::find(state.lines.begin(), state.lines.end(), goalLine.opposite()) == state.lines.end()) {
-            missingParts++;
+            cost++;
         }
     }
 
@@ -32,11 +33,11 @@ float Puzzle::cost() const {
     for (const auto& goalCircle : goalState.circles) {
         if (std::find(state.circles.begin(), state.circles.end(), goalCircle) == state.circles.end() &&
             std::find(state.circles.begin(), state.circles.end(), goalCircle.opposite()) == state.circles.end()) {
-            missingParts++;
+            cost++;
         }
     }
 
-    return missingParts;
+    return cost;
 }
 
 
@@ -208,7 +209,7 @@ Puzzle beta2_bisectors_centre() {
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
     Point C(0.6, 1.33), D(1.26, 0.58);
-    const PuzzleState initialState({A, B, C, D}, {}, {}, {PuzzleState::createCircle(A, B)});
+    const PuzzleState initialState({A, B}, {}, {}, {PuzzleState::createCircle(A, B)});
     Point E(1, 1);
     const PuzzleState goalState({}, {}, {Line(B, E)}, {});
     const int optimalDepth = 3;

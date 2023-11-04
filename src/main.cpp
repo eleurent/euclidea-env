@@ -14,8 +14,8 @@ int main()
         // alpha4_circle_in_square(),
         // alpha5_diamond_in_rectangle(),
         // alpha7_inscribed_square(),
-        beta1_bisector(),
-        // beta8_tangent_to_line_at_point(),
+        // beta1_bisector(),
+        beta8_tangent_to_line_at_point(),
         }) {
         const int maxIterations = 3000;
         // const auto& bestPath = breadthFirstSearch(puzzle, maxIterations);

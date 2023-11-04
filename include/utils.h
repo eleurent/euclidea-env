@@ -9,8 +9,14 @@ using Segment = Kernel::Segment_2;
 using Line = Kernel::Line_2;
 using Circle = Kernel::Circle_2;
 
-std::string toString(const Point point) {
-  std::ostringstream stringStream;
-  stringStream << "(" << CGAL::to_double(point.x()) << ", " << CGAL::to_double(point.y()) << ")";
-  return stringStream.str();
+
+namespace Utils
+{
+  const extern float DISTANCE_THRESHOLD;
+
+  std::string toString(const Point point);
+
+  bool find(const Point& point, const std::vector<Point>& points, const float maxDistance = DISTANCE_THRESHOLD);
+  bool isOn(const Point& point, const Line& line, const float maxDistance = DISTANCE_THRESHOLD);
+  bool isOn(const Point& point, const Segment& line, const float maxDistance = DISTANCE_THRESHOLD);
 }

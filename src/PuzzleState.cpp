@@ -49,11 +49,11 @@ bool PuzzleState::findLineIntersection(const Line& line1, const Segment& line2, 
     return hasIntersection && line2.has_on(intersection);
 }
 
-bool PuzzleState::findCircleIntersections(const Circle& circle, const Segment& line, std::vector<Point>& intersections, const float maxDistance) {
+bool PuzzleState::findCircleIntersections(const Circle& circle, const Segment& line, std::vector<Point>& intersections) {
     std::vector<Point> candidates;
     const bool hasIntersection = findCircleIntersections(circle, Line(line.start(), line.end()), candidates);
     for (const auto& candidate: candidates) {
-        if (CGAL::squared_distance(candidate, line) < maxDistance)
+        if (Utils::isOn(candidate, line))
             intersections.push_back(candidate);
     }
     return hasIntersection && !intersections.empty();
@@ -83,13 +83,9 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
     return !intersections.empty();
 }
 
-void PuzzleState::maybeAddPoint(const Point& point, const float min_distance) {
-    for (const auto other: points) {
-        if (CGAL::squared_distance(point, other) < min_distance) {
-            return;
-        }
-    }
-    points.push_back(point);
+void PuzzleState::maybeAddPoint(const Point& point) {
+    if (!Utils::find(point, points))
+        points.push_back(point);
 }
 
 void PuzzleState::maybeAddLine(const Line& line) {
