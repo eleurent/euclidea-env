@@ -1,8 +1,27 @@
 #include "utils.h"
 
+const float DISTANCE_THRESHOLD = 1e-5f;
+
+bool Point::operator==(const Point& other) const {
+    return hash() == other.hash();
+}
+
+std::size_t Point::hash() const {
+    int rounded_x = static_cast<int>(CGAL::to_double(x()) * 10000);
+    int rounded_y = static_cast<int>(CGAL::to_double(y()) * 10000);
+    std::size_t hash_value = 0;
+    hash_combine(hash_value, rounded_x);
+    hash_combine(hash_value, rounded_y);
+
+    return hash_value;
+}
+
+std::ostream& operator << ( std::ostream& outs, const Point & p )
+{
+  return outs << "(" <<  CGAL::to_double(p.x()) << "," << CGAL::to_double(p.y()) << ")";
+}
 
 namespace Utils {
-  const float DISTANCE_THRESHOLD = 1e-5f;
 
   std::string toString(const Point point) {
     std::ostringstream stringStream;

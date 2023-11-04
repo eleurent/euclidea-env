@@ -1,18 +1,14 @@
 #pragma once
 #include <vector>
+#include <unordered_set>
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>
+#include "utils.h"
 
-using Kernel = CGAL::Exact_circular_kernel_2;
-using Point = Kernel::Point_2;
-using Segment = Kernel::Segment_2;
-using Line = Kernel::Line_2;
-using Circle = Kernel::Circle_2;
-typedef CGAL::CK2_Intersection_traits<Kernel, Circle, Circle>::type Intersection_result;
 
 class PuzzleState {
 public:
-    PuzzleState(const std::vector<Point>& pointsVec, const std::vector<Segment>& segmentsVec, const std::vector<Line>& linesVec, const std::vector<Circle>& circlesVec);
+    PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::vector<Line>& linesVec, const std::vector<Circle>& circlesVec);
     PuzzleState& operator=(const PuzzleState& rhs);
 
     void maybeAddPoint(const Point& point);
@@ -24,7 +20,7 @@ public:
 
     static Circle createCircle(const Point& center, const Point& pointOnCircle) {return Circle(center - (pointOnCircle - center), pointOnCircle);};
 
-    std::vector<Point> points;
+    std::unordered_set<Point> points;
     std::vector<Segment> segments;
     std::vector<Line> lines;
     std::vector<Circle> circles;    

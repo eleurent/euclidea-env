@@ -1,23 +1,17 @@
 #include "PuzzleState.h"
-#include "utils.h"
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>
 
-using Kernel = CGAL::Exact_circular_kernel_2;
-using Point = Kernel::Point_2;
-using Line = Kernel::Line_2;
-using Circle = Kernel::Circle_2;
-using Circular_arc_point = Kernel::Circular_arc_point_2;
 typedef CGAL::CK2_Intersection_traits<Kernel, Circle, Circle>::type Intersection_result;
 
 
 
 PuzzleState::PuzzleState(
-    const std::vector<Point>& pointsVec,
+    const std::unordered_set<Point>& pointsSet,
     const std::vector<Segment>& segmentsVec,
     const std::vector<Line>& linesVec,
     const std::vector<Circle>& circlesVec
-) : points(pointsVec), segments(segmentsVec), lines(linesVec), circles(circlesVec) {
+) : points(pointsSet), segments(segmentsVec), lines(linesVec), circles(circlesVec) {
 }
 
 PuzzleState& PuzzleState::operator=(const PuzzleState& other) {
@@ -36,8 +30,8 @@ bool PuzzleState::findLineIntersection(const Line& line1, const Line& line2, Poi
     CGAL::intersection(line1, line2, std::back_inserter(intersections));
 
     if (!intersections.empty()) {
-        if (const Point* p = CGAL::object_cast<Point>(&intersections.front())) {
-            intersection = *p;
+        if (const Kernel::Point_2* p = CGAL::object_cast<Kernel::Point_2>(&intersections.front())) {
+            intersection = Point(*p);
             return true;
         }
     }
@@ -84,8 +78,8 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
 }
 
 void PuzzleState::maybeAddPoint(const Point& point) {
-    if (!Utils::find(point, points))
-        points.push_back(point);
+    if (!points.count(point))
+        points.insert(point);
 }
 
 void PuzzleState::maybeAddLine(const Line& line) {
@@ -116,6 +110,7 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
     
     for (const Line& existingLine : lines) {
         Point intersection;
+
         if (findLineIntersection(newLine, existingLine, intersection)) {
             maybeAddPoint(intersection);
         }

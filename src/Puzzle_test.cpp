@@ -14,30 +14,32 @@ TEST(Puzzle, StepPuzzle) {
 
 TEST(PuzzleSolutions, Alpha0Test) {
     Puzzle& puzzle = alpha0_equilateral_triangle();
-    ASSERT_EQ(puzzle.cost(), 3);
+    Point A(0, 0), B(1, 0);
+    ASSERT_EQ(puzzle.cost(), 2.5);
     Point C(0.5, sqrt(3)/2);
 
     auto& actions = puzzle.availableActions();
     ASSERT_EQ(actions.size(), 3);  // two circles and a line
 
     // First circle
-    puzzle.state.drawCircle(puzzle.state.points[0], puzzle.state.points[1]);
-    ASSERT_EQ(puzzle.cost(), 3);
+    puzzle.state.drawCircle(A, B);
+    ASSERT_EQ(puzzle.state.points.size(), 2);
+    ASSERT_EQ(puzzle.cost(), 2.5);
     actions = puzzle.availableActions();
     ASSERT_EQ(actions.size(), 2); // one circles centered on B, one centered on D
 
 
     // Second circle
-    puzzle.state.drawCircle(puzzle.state.points[1], puzzle.state.points[0]);
+    puzzle.state.drawCircle(B, A);
     ASSERT_EQ(puzzle.state.points.size(), 4);
     ASSERT_THAT(puzzle.state.points, ::testing::Contains(C));
-    ASSERT_EQ(puzzle.cost(), 2);
+    ASSERT_EQ(puzzle.cost(), 1);
 
     // Line AC
-    puzzle.state.drawLine(puzzle.state.points[0], C);
-    ASSERT_EQ(puzzle.cost(), 1);
+    puzzle.state.drawLine(A, C);
+    ASSERT_EQ(puzzle.cost(), 0.5);
     // Line BC
-    puzzle.state.drawLine(puzzle.state.points[1], C);
+    puzzle.state.drawLine(B, C);
     ASSERT_EQ(puzzle.cost(), 0);
 }
 
@@ -71,7 +73,7 @@ TEST(PuzzleSolutions, Alpha4Test) {
     actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action4));
     puzzle = puzzle.applyAction(action4);
-    ASSERT_EQ(puzzle.cost(), 3);
+    ASSERT_EQ(puzzle.cost(), 2.75);  // Bonus because we have the circle center
 
     Point G(0.5, 0.5);
     Puzzle::Action action5(Puzzle::Action::ActionType::DrawCircle, G, F);

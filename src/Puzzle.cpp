@@ -5,6 +5,7 @@
 const float MIN_DISTANCE = 0.01f;
 
 bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
+    //TODO: replace this by a custom class and whith a hash function computed based on line and its opposite
     bool sameLine = ((type == other.type == DrawLine) && ((Line(p1, p2) == Line(other.p1, other.p2)) || (Line(p1, p2) == Line(other.p1, other.p2).opposite())));
     bool sameCircle = ((type == other.type == DrawCircle) && ((PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2)) ||
                                                             (PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2).opposite()))) ;
@@ -16,13 +17,14 @@ float Puzzle::cost() const {
 
     // Check missing points
     for (const auto& goalPoint : goalState.points) {
-        if (Utils::find(goalPoint, state.points)) {
+        if (!state.points.count(goalPoint)) {
             cost++;
         }
     }
 
     // Check missing lines
     for (const auto& goalLine : goalState.lines) {
+        //TODO: replace this by custom class with approximate checks
         if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end() &&
             std::find(state.lines.begin(), state.lines.end(), goalLine.opposite()) == state.lines.end()) {
             cost++;
@@ -43,7 +45,7 @@ float Puzzle::cost() const {
             cost++;
 
             // Add bonus for construction points: center
-            if (Utils::find(goalCircle.center(), state.points))
+            if (state.points.count(goalCircle.center()))
                 cost -= 0.25f;
 
             // A point on the circle
@@ -65,14 +67,14 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
     std::vector<Action> actions;
     std::vector<Line> addedLines;
     addedLines.assign(state.lines.begin(), state.lines.end());
-    for (int i = 0; i < state.points.size(); ++i) {
-        for (int j = i + 1; j < state.points.size(); ++j) {
-            if (CGAL::squared_distance(state.points[i], state.points[j]) < MIN_DISTANCE)
+    for (const auto& point_i: state.points) {
+        for (const auto& point_j: state.points) {
+            if (CGAL::squared_distance(point_i, point_j) < MIN_DISTANCE)
                 continue;
-            Line line(state.points[i], state.points[j]);
+            Line line(point_i, point_j);
             if (std::find(addedLines.begin(), addedLines.end(), line) == addedLines.end() &&
                 std::find(addedLines.begin(), addedLines.end(), line.opposite()) == addedLines.end()) {
-                actions.push_back({ Action::DrawLine, state.points[i], state.points[j] });
+                actions.push_back({ Action::DrawLine, point_i, point_j });
                 addedLines.push_back(line);
             }
         }
@@ -109,14 +111,8 @@ Puzzle Puzzle::applyAction(const Action& action) const {
 }
 
 Puzzle alpha0_equilateral_triangle() {
-    Point A(0, 0), B(1, 0);
+    Point A(0, 0), B(1, 0), C(0.5, sqrt(3)/2);
     const PuzzleState initialState({A, B}, {Segment(A, B)}, {}, {});
-
-    PuzzleState tmp = initialState;
-    tmp.drawCircle(A, B);
-    tmp.drawCircle(B, A);
-    Point C = tmp.points.back();
-
     const PuzzleState goalState({C}, {}, {Line(A, C), Line(B, C)}, {});
     const int optimalDepth = 3;
     return Puzzle(initialState, goalState, optimalDepth);
@@ -150,21 +146,21 @@ Puzzle alpha4_circle_in_square() {
     return Puzzle(initialState, goalState, optimalDepth);
 }
 
-Puzzle alpha5_diamond_in_rectangle() {
-    Point A(0, 0), B(2, 0), C(2, 1), D(0, 1);
-    const PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
+// Puzzle alpha5_diamond_in_rectangle() {
+//     Point A(0, 0), B(2, 0), C(2, 1), D(0, 1);
+//     const PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
     
-    PuzzleState tmp = initialState;
-    tmp.drawCircle(A, C);
-    tmp.drawCircle(C, A);
-    Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
-    tmp.drawLine(E, F);
-    Point G(tmp.points[tmp.points.size()-2]), H(tmp.points[tmp.points.size()-1]);
+//     PuzzleState tmp = initialState;
+//     tmp.drawCircle(A, C);
+//     tmp.drawCircle(C, A);
+//     Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
+//     tmp.drawLine(E, F);
+//     Point G(tmp.points[tmp.points.size()-2]), H(tmp.points[tmp.points.size()-1]);
 
-    const PuzzleState goalState({G, H}, {}, {Line(A, G), Line(C, H)}, {});
-    const int optimalDepth = 5;
-    return Puzzle(initialState, goalState, optimalDepth);
-}
+//     const PuzzleState goalState({G, H}, {}, {Line(A, G), Line(C, H)}, {});
+//     const int optimalDepth = 5;
+//     return Puzzle(initialState, goalState, optimalDepth);
+// }
 
 Puzzle alpha6_circle_centre() {
     Point A(0, 0), B(1, 0);
@@ -184,47 +180,47 @@ Puzzle alpha7_inscribed_square() {
 }
 
 
-Puzzle beta1_bisector() {
-    // TODO : requires addition of random points 
-    Point A(0, 0), B(100, 0), C(100, 100);
-    // We use segments instead of half-lines here
-    const PuzzleState initialState({A}, {Segment(A, B), Segment(A, C)}, {}, {});
+// Puzzle beta1_bisector() {
+//     // TODO : requires addition of random points 
+//     Point A(0, 0), B(100, 0), C(100, 100);
+//     // We use segments instead of half-lines here
+//     const PuzzleState initialState({A}, {Segment(A, B), Segment(A, C)}, {}, {});
     
-    PuzzleState tmp = initialState;
-    tmp.drawCircle(A, Point(1, 0));
-    Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
-    tmp.drawCircle(E, F);
-    tmp.drawCircle(F, E);
-    Point H(tmp.points[tmp.points.size()-1]);
+//     PuzzleState tmp = initialState;
+//     tmp.drawCircle(A, Point(1, 0));
+//     Point E(tmp.points[tmp.points.size()-2]), F(tmp.points[tmp.points.size()-1]);
+//     tmp.drawCircle(E, F);
+//     tmp.drawCircle(F, E);
+//     Point H(tmp.points[tmp.points.size()-1]);
 
-    const PuzzleState goalState({}, {}, {Line(A, H)}, {});
-    const int optimalDepth = 4;
-    return Puzzle(initialState, goalState, optimalDepth);
-}
+//     const PuzzleState goalState({}, {}, {Line(A, H)}, {});
+//     const int optimalDepth = 4;
+//     return Puzzle(initialState, goalState, optimalDepth);
+// }
 
-Puzzle beta2_bisectors_centre() {
-    Point A(0, 0), B(2, 0), C(0.1, 1);
-    // We use segments instead of half-lines here
-    const PuzzleState initialState({A, B, C}, {Segment(A, B), Segment(B, C), Segment(C, A)}, {}, {});
+// Puzzle beta2_bisectors_centre() {
+//     Point A(0, 0), B(2, 0), C(0.1, 1);
+//     // We use segments instead of half-lines here
+//     const PuzzleState initialState({A, B, C}, {Segment(A, B), Segment(B, C), Segment(C, A)}, {}, {});
     
-    PuzzleState tmp = initialState;
-    tmp.drawCircle(A, C);
-    Point E(tmp.points[tmp.points.size()-1]);
-    tmp.drawCircle(C, E);
-    tmp.drawCircle(E, C);
-    Point H(tmp.points[tmp.points.size()-1]);
-    std::cout << "tmp has " << tmp.points.size() << "points" << std::endl;
-    for (auto point: tmp.points)
-        std::cout << CGAL::to_double(point.x()) << " " << CGAL::to_double(point.y()) << std::endl;
+//     PuzzleState tmp = initialState;
+//     tmp.drawCircle(A, C);
+//     Point E(tmp.points[tmp.points.size()-1]);
+//     tmp.drawCircle(C, E);
+//     tmp.drawCircle(E, C);
+//     Point H(tmp.points[tmp.points.size()-1]);
+//     std::cout << "tmp has " << tmp.points.size() << "points" << std::endl;
+//     for (auto point: tmp.points)
+//         std::cout << CGAL::to_double(point.x()) << " " << CGAL::to_double(point.y()) << std::endl;
 
-    std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+//     std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
 
-    Line bisector1(A, H);
+//     Line bisector1(A, H);
 
-    const PuzzleState goalState({}, {}, {}, {});
-    const int optimalDepth = 4;
-    return Puzzle(initialState, goalState, optimalDepth);
-}
+//     const PuzzleState goalState({}, {}, {}, {});
+//     const int optimalDepth = 4;
+//     return Puzzle(initialState, goalState, optimalDepth);
+// }
 
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);

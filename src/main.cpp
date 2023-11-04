@@ -22,9 +22,7 @@ int main()
         const auto& bestPath = aStarSearch(puzzle, maxIterations, puzzle.optimalDepth+2, puzzle.optimalDepth);
         std::cout << "Found cost " << bestPath.first.cost() << " in " << bestPath.second.size() << " actions." << std::endl;
         for (const auto& action: bestPath.second) {
-            std::cout << (action.type ? "Circle" : "Line") << 
-            " (" << CGAL::to_double(action.p1.x()) << ", " << CGAL::to_double(action.p1.y()) << ") - (" 
-                << CGAL::to_double(action.p2.x()) << ", " << CGAL::to_double(action.p2.y()) << ")" << std::endl;
+            std::cout << (action.type ? "Circle" : "Line") << ": " << action.p1 << " - " << action.p2 << std::endl;
         }
     }
 }
