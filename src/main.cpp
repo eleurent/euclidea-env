@@ -17,9 +17,8 @@ int main()
         // beta1_bisector(),
         beta8_tangent_to_line_at_point(),
         }) {
-        const int maxIterations = 300;
-        // const auto& bestPath = breadthFirstSearch(puzzle, maxIterations);
-        const auto& bestPath = aStarSearch(puzzle, maxIterations, puzzle.optimalDepth+2, puzzle.optimalDepth);
+        const int maxIterations = 3000;
+        const auto& bestPath = aStarSearch(puzzle, maxIterations, puzzle.optimalDepth+1, puzzle.optimalDepth);
         std::cout << "Found cost " << bestPath.first.cost() << " in " << bestPath.second.size() << " actions." << std::endl;
         for (const auto& action: bestPath.second) {
             std::cout << (action.type ? "Circle" : "Line") << ": " << action.p1 << " - " << action.p2 << std::endl;

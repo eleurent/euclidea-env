@@ -1,4 +1,5 @@
 #include <queue>
+#include <unordered_set>
 #include "Search.h"
 
 
@@ -9,6 +10,7 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, const int maxIterations, cons
     StatePath bestPath = std::make_pair(puzzle, emptyPath);
     float bestCost = puzzle.cost();
     puzzleQueue.push(bestPath);
+    std::unordered_set<PuzzleState> discoveredStates;
 
     while (!puzzleQueue.empty() && ++iterations < maxIterations) {
         if (iterations % (maxIterations / 10) == 0) {
@@ -31,8 +33,15 @@ StatePath breadthFirstSearch(const Puzzle& puzzle, const int maxIterations, cons
                 bestCost = childPuzzle.cost();
                 bestPath = newPuzzlePath;
             }
-            if (bestCost > 0 && newPath.size() < maxDepth)
+            if (bestCost > 0 && newPath.size() < maxDepth) {
+                if (discoveredStates.count(childPuzzle.state)) {
+                    continue;
+                }
+                else {
+                    discoveredStates.insert(childPuzzle.state);
+                }
                 puzzleQueue.push(newPuzzlePath);
+            }
         }
     }
     return bestPath;
@@ -46,6 +55,7 @@ StatePath aStarSearch(const Puzzle& puzzle, const int maxIterations, const int m
     StatePath bestPath = std::make_pair(puzzle, emptyPath);
     float bestCost = puzzle.cost();
     puzzleQueue.push(bestPath);
+    std::unordered_set<PuzzleState> discoveredStates;
 
     while (!puzzleQueue.empty() && ++iterations < maxIterations) {
         const auto puzzlePath = puzzleQueue.top();
@@ -72,8 +82,15 @@ StatePath aStarSearch(const Puzzle& puzzle, const int maxIterations, const int m
             }
             if (newCost == 0 && newPath.size() == optimalDepth)
                 return bestPath;
-            if (newCost > 0 && newPath.size() < maxDepth)
+            if (newCost > 0 && newPath.size() < maxDepth) {
+                if (discoveredStates.count(childPuzzle.state)) {
+                    continue;
+                }
+                else {
+                    discoveredStates.insert(childPuzzle.state);
+                }
                 puzzleQueue.push(newPuzzlePath);
+            }
         }
     }
     return bestPath;

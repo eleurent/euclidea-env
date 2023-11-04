@@ -14,11 +14,32 @@ TEST(Puzzle, StepPuzzle) {
 }
 
 
+TEST(Puzzle, HashPuzzleState) {
+    Puzzle& puzzle0 = alpha0_equilateral_triangle();
+    Point A(0, 0), B(1, 0), C(0.5, sqrt(3)/2);
+    
+    Puzzle::Action action1(Puzzle::Action::ActionType::DrawCircle, A, B);
+    Puzzle::Action action2(Puzzle::Action::ActionType::DrawCircle, B, A);
+    Puzzle& puzzle1 = puzzle0.applyAction(action1);
+    Puzzle& puzzle2 = puzzle0.applyAction(action2);
+    Puzzle& puzzle12 = puzzle1.applyAction(action2);
+    Puzzle& puzzle21 = puzzle2.applyAction(action1);
+
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle0.state), std::hash<PuzzleState>()(puzzle1.state));
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle0.state), std::hash<PuzzleState>()(puzzle2.state));
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle1.state), std::hash<PuzzleState>()(puzzle2.state));
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle0.state), std::hash<PuzzleState>()(puzzle12.state));
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle1.state), std::hash<PuzzleState>()(puzzle12.state));
+    EXPECT_NE(std::hash<PuzzleState>()(puzzle2.state), std::hash<PuzzleState>()(puzzle12.state));
+    EXPECT_EQ(std::hash<PuzzleState>()(puzzle12.state), std::hash<PuzzleState>()(puzzle21.state));
+}
+
+
+
 TEST(PuzzleSolutions, Alpha0Test) {
     Puzzle& puzzle = alpha0_equilateral_triangle();
-    Point A(0, 0), B(1, 0);
+    Point A(0, 0), B(1, 0), C(0.5, sqrt(3)/2);
     ASSERT_EQ(puzzle.cost(), 2.5);
-    Point C(0.5, sqrt(3)/2);
 
     auto& actions = puzzle.availableActions();
     ASSERT_EQ(actions.size(), 3);  // two circles and a line

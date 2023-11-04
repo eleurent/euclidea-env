@@ -3,18 +3,17 @@
 const float DISTANCE_THRESHOLD = 1e-5f;
 const float DISTANCE_INVERSE_THRESHOLD = 10000;
 
-bool Point::operator==(const Point& other) const {
-    return hash() == other.hash();
-}
-
 std::size_t Point::hash() const {
     int rounded_x = static_cast<int>(CGAL::to_double(x()) * DISTANCE_INVERSE_THRESHOLD);
     int rounded_y = static_cast<int>(CGAL::to_double(y()) * DISTANCE_INVERSE_THRESHOLD);
     std::size_t hash_value = 0;
     hash_combine(hash_value, rounded_x);
     hash_combine(hash_value, rounded_y);
-
     return hash_value;
+}
+
+bool Point::operator==(const Point& other) const {
+    return hash() == other.hash();
 }
 
 std::ostream& operator << ( std::ostream& outs, const Point & p )
@@ -27,10 +26,6 @@ Circle Circle::fromRadius(const Point& center, const Point& pointOnCircle) {
   return Circle(center - (pointOnCircle - center), pointOnCircle);
 };
 
-bool Circle::operator==(const Circle& other) const {
-    return hash() == other.hash();
-}
-
 std::size_t Circle::hash() const {
     std::size_t hash_value = 0;
     hash_combine(hash_value, Point(center()).hash());
@@ -39,15 +34,16 @@ std::size_t Circle::hash() const {
     return hash_value;
 }
 
+bool Circle::operator==(const Circle& other) const {
+    return hash() == other.hash();
+}
+
 std::ostream& operator << ( std::ostream& outs, const Circle & c )
 {
   return outs << "[" << Point(c.center()) << ", " << c.squared_radius() << "]";
 }
 
 
-bool Line::operator==(const Line& other) const {
-    return hash() == other.hash();
-}
 
 std::size_t Line::hash() const {
     std::size_t hash_value = 0;
@@ -66,6 +62,9 @@ std::size_t Line::hash() const {
     return hash_value;
 }
 
+bool Line::operator==(const Line& other) const {
+    return hash() == other.hash();
+}
 
 namespace Utils {
   bool isOn(const Point& point, const Line& line, const float maxDistance) {

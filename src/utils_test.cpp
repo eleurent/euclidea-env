@@ -23,3 +23,18 @@ TEST(Hashing, HashLine) {
     EXPECT_EQ(hasher(Line(A, B)), hasher(Line(C, B)));
     EXPECT_NE(hasher(Line(A, B)), hasher(Line(A, D)));
 }
+
+TEST(Hashing, HashSet) {
+    Point A(0, 0), B(0.1, 0), C(0.00001, 0), D(-0.00001, 0), E(-0.1, 0);
+    std::unordered_set<Point> pointSet1 = { A, B, C};
+    std::unordered_set<Point> pointSet2 = { A, C, B};
+    std::unordered_set<Point> pointSet3 = { A, B, C, E};
+    std::unordered_set<Point> pointSet4 = { E, B, C, A};
+    std::unordered_set<Point> pointSet5 = { A, B, C, D};
+    EXPECT_EQ(hashSet(pointSet1), hashSet(pointSet2));
+    EXPECT_NE(hashSet(pointSet2), hashSet(pointSet3));
+    EXPECT_EQ(hashSet(pointSet3), hashSet(pointSet4));
+    EXPECT_NE(hashSet(pointSet4), hashSet(pointSet5));
+    EXPECT_EQ(hashSet(pointSet5), hashSet(pointSet1));
+
+}

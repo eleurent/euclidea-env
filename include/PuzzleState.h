@@ -10,6 +10,8 @@ class PuzzleState {
 public:
     PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::unordered_set<Line>& linesSet, const std::unordered_set<Circle>& circlesSet);
     PuzzleState& operator=(const PuzzleState& rhs);
+    std::size_t hash() const;
+    bool operator==(const PuzzleState& other) const;
 
     void drawLine(const Point& start, const Point& end);
     void drawCircle(const Point& center, const Point& pointOnCircle);
@@ -25,4 +27,11 @@ private:
     bool findCircleIntersections(const Circle& circle, const Line& line, std::vector<Point>& intersections);
     bool findCircleIntersections(const Circle& circle, const Segment& line, std::vector<Point>& intersections);
     bool findCircleIntersections(const Circle& circle1, const Circle& circle2, std::vector<Point>& intersections);
+};
+
+namespace std {
+    template <>
+    struct hash<PuzzleState> {
+        std::size_t operator()(const PuzzleState& p) const {  return p.hash(); }
+    };
 };

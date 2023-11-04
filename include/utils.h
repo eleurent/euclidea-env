@@ -1,8 +1,10 @@
 #pragma once
+#include <unordered_set>
 #include <vector>
+#include <functional>
+#include <algorithm>
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>
-#include <functional>
 
 using Kernel = CGAL::Exact_circular_kernel_2;
 // using Point = Kernel::Point_2;
@@ -15,12 +17,27 @@ using Circular_arc_point = Kernel::Circular_arc_point_2;
 const extern float DISTANCE_THRESHOLD;
 const extern float DISTANCE_INVERSE_THRESHOLD;
 
-
 template <class T>
 inline void hash_combine(std::size_t & seed, const T & v)
 {
   std::hash<T> hasher;
   seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+
+template <typename T>
+std::size_t hashSet(const std::unordered_set<T>& set) {
+  std::vector<size_t> hashes;
+  for (const auto& element: set)
+    hashes.push_back(std::hash<T>()(element));
+  // We hash the sorted vector.
+  // TODO: should we use set instead of unordered_set? It's already sorted by hashes?
+  // TODO: consider summing/xoring the hashes rather than sorting, for efficiency.
+  std::sort(hashes.begin(), hashes.end());
+  std::size_t hash_value = 0;
+  for (const size_t& element_hash : hashes)
+      hash_combine(hash_value, element_hash);
+  return hash_value;
 }
 
 
@@ -31,8 +48,8 @@ public:
     Point(double x, double y) : Kernel::Point_2(x, y) {}
     Point(Kernel::Point_2 p) : Kernel::Point_2(p) {}
     Point() : Kernel::Point_2() {}
-    bool operator==(const Point& other) const;
     std::size_t hash() const;
+    bool operator==(const Point& other) const;
 };
 
 namespace std {
@@ -54,8 +71,8 @@ public:
     Circle(Kernel::Circle_2 p) : Kernel::Circle_2(p) {}
     Circle() : Kernel::Circle_2() {}
     static Circle fromRadius(const Point& center, const Point& pointOnCircle);
-    bool operator==(const Circle& other) const;
     std::size_t hash() const;
+    bool operator==(const Circle& other) const;
 };
 
 namespace std {
@@ -76,8 +93,8 @@ public:
     Line(Point x, Point y) : Kernel::Line_2(x, y) {}
     Line(Kernel::Line_2 l) : Kernel::Line_2(l) {}
     Line() : Kernel::Line_2() {}
-    bool operator==(const Line& other) const;
     std::size_t hash() const;
+    bool operator==(const Line& other) const;
 };
 
 namespace std {
@@ -90,6 +107,8 @@ namespace std {
 };
 
 
+
+// TODO: move this to class functions?
 namespace Utils
 {
   bool isOn(const Point& point, const Line& line, const float maxDistance = DISTANCE_THRESHOLD);

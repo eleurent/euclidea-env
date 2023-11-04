@@ -24,6 +24,24 @@ PuzzleState& PuzzleState::operator=(const PuzzleState& other) {
     return *this;
 }
 
+std::size_t PuzzleState::hash() const {
+    // Note we don't hash segments as they cannot be modified by the user
+    size_t pointsHash = hashSet<Point>(points);
+    size_t linesHash = hashSet<Line>(lines);
+    size_t circlesHash = hashSet<Circle>(circles);
+    size_t hashValue = 0;
+    hash_combine(hashValue, pointsHash);
+    hash_combine(hashValue, linesHash);
+    hash_combine(hashValue, circlesHash);
+    return hashValue;
+}
+
+bool PuzzleState::operator==(const PuzzleState& other) const {
+    // We don't compare segments
+    return hash() == other.hash();
+}
+
+
 bool PuzzleState::findLineIntersection(const Line& line1, const Line& line2, Point& intersection) {
     std::vector<CGAL::Object> intersections;
     CGAL::intersection(line1, line2, std::back_inserter(intersections));
