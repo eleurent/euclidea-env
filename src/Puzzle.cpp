@@ -26,6 +26,13 @@ float Puzzle::cost() const {
         if (std::find(state.lines.begin(), state.lines.end(), goalLine) == state.lines.end() &&
             std::find(state.lines.begin(), state.lines.end(), goalLine.opposite()) == state.lines.end()) {
             cost++;
+
+            // Add bonus for construction points (but not beyond 2 points)
+            int numConstructionPoints = 0;
+            for (const auto& point: state.points) {
+                if (Utils::isOn(point, goalLine)) numConstructionPoints++;
+            }
+            cost -= 0.25f * std::min(numConstructionPoints, 2);
         }
     }
 
@@ -34,6 +41,19 @@ float Puzzle::cost() const {
         if (std::find(state.circles.begin(), state.circles.end(), goalCircle) == state.circles.end() &&
             std::find(state.circles.begin(), state.circles.end(), goalCircle.opposite()) == state.circles.end()) {
             cost++;
+
+            // Add bonus for construction points: center
+            if (Utils::find(goalCircle.center(), state.points))
+                cost -= 0.25f;
+
+            // A point on the circle
+            for (const auto& point: state.points) {
+                if (Utils::isOn(point, goalCircle)) {
+                    cost -= 0.25f;
+                    break;
+                }
+            }
+
         }
     }
 

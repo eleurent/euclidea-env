@@ -18,5 +18,6 @@ namespace Utils
 
   bool find(const Point& point, const std::vector<Point>& points, const float maxDistance = DISTANCE_THRESHOLD);
   bool isOn(const Point& point, const Line& line, const float maxDistance = DISTANCE_THRESHOLD);
-  bool isOn(const Point& point, const Segment& line, const float maxDistance = DISTANCE_THRESHOLD);
+  bool isOn(const Point& point, const Segment& segment, const float maxDistance = DISTANCE_THRESHOLD);
+  bool isOn(const Point& point, const Circle& circle, const float maxDistance = DISTANCE_THRESHOLD);
 }

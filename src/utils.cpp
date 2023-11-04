@@ -24,9 +24,13 @@ namespace Utils {
     // Replaces Line::has_on
     return CGAL::squared_distance(point, line) < maxDistance;
   }
-  bool isOn(const Point& point, const Segment& line, const float maxDistance) {
-    // Replaces Line::has_on
-    return CGAL::squared_distance(point, line) < maxDistance;
+  bool isOn(const Point& point, const Segment& segment, const float maxDistance) {
+    // Replaces Segment::has_on
+    return CGAL::squared_distance(point, segment) < maxDistance;
+  }
+  bool isOn(const Point& point, const Circle& circle, const float maxDistance) {
+    // Replaces Circle::has_on
+    Point center(circle.center());
+    return maxDistance - circle.squared_radius() < CGAL::squared_distance(point, center) < maxDistance + circle.squared_radius();
   }
 }
-
