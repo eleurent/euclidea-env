@@ -2,16 +2,15 @@
 #include <CGAL/Exact_circular_kernel_2.h>
 #include <CGAL/Circular_kernel_intersections.h>
 
-typedef CGAL::CK2_Intersection_traits<Kernel, Circle, Circle>::type Intersection_result;
-
+typedef CGAL::CK2_Intersection_traits<Kernel, Kernel::Circle_2, Kernel::Circle_2>::type Intersection_result;
 
 
 PuzzleState::PuzzleState(
     const std::unordered_set<Point>& pointsSet,
     const std::vector<Segment>& segmentsVec,
     const std::vector<Line>& linesVec,
-    const std::vector<Circle>& circlesVec
-) : points(pointsSet), segments(segmentsVec), lines(linesVec), circles(circlesVec) {
+    const std::unordered_set<Circle>& circlesSet
+) : points(pointsSet), segments(segmentsVec), lines(linesVec), circles(circlesSet) {
 }
 
 PuzzleState& PuzzleState::operator=(const PuzzleState& other) {
@@ -78,8 +77,7 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
 }
 
 void PuzzleState::maybeAddPoint(const Point& point) {
-    if (!points.count(point))
-        points.insert(point);
+    points.insert(point);
 }
 
 void PuzzleState::maybeAddLine(const Line& line) {
@@ -91,11 +89,7 @@ void PuzzleState::maybeAddLine(const Line& line) {
 }
 
 void PuzzleState::maybeAddCircle(const Circle& circle) {
-    // TODO: use std::unordered_set
-    if (std::find(circles.begin(), circles.end(), circle) == circles.end() &&
-        std::find(circles.begin(), circles.end(), circle.opposite()) == circles.end()) {
-        circles.push_back(circle);
-    }
+    circles.insert(circle);
 }
 
 void PuzzleState::drawLine(const Point& start, const Point& end) {

@@ -8,7 +8,7 @@
 
 class PuzzleState {
 public:
-    PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::vector<Line>& linesVec, const std::vector<Circle>& circlesVec);
+    PuzzleState(const std::unordered_set<Point>& pointsSet, const std::vector<Segment>& segmentsVec, const std::vector<Line>& linesVec, const std::unordered_set<Circle>& circlesSet);
     PuzzleState& operator=(const PuzzleState& rhs);
 
     void maybeAddPoint(const Point& point);
@@ -23,7 +23,7 @@ public:
     std::unordered_set<Point> points;
     std::vector<Segment> segments;
     std::vector<Line> lines;
-    std::vector<Circle> circles;    
+    std::unordered_set<Circle> circles;    
 private:
 
     bool findLineIntersection(const Line& line1, const Line& line2, Point& intersection);

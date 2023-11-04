@@ -1,14 +1,15 @@
 #include "utils.h"
 
 const float DISTANCE_THRESHOLD = 1e-5f;
+const float DISTANCE_INVERSE_THRESHOLD = 10000;
 
 bool Point::operator==(const Point& other) const {
     return hash() == other.hash();
 }
 
 std::size_t Point::hash() const {
-    int rounded_x = static_cast<int>(CGAL::to_double(x()) * 10000);
-    int rounded_y = static_cast<int>(CGAL::to_double(y()) * 10000);
+    int rounded_x = static_cast<int>(CGAL::to_double(x()) * DISTANCE_INVERSE_THRESHOLD);
+    int rounded_y = static_cast<int>(CGAL::to_double(y()) * DISTANCE_INVERSE_THRESHOLD);
     std::size_t hash_value = 0;
     hash_combine(hash_value, rounded_x);
     hash_combine(hash_value, rounded_y);
@@ -19,6 +20,23 @@ std::size_t Point::hash() const {
 std::ostream& operator << ( std::ostream& outs, const Point & p )
 {
   return outs << "(" <<  CGAL::to_double(p.x()) << "," << CGAL::to_double(p.y()) << ")";
+}
+
+bool Circle::operator==(const Circle& other) const {
+    return hash() == other.hash();
+}
+
+std::size_t Circle::hash() const {
+    std::size_t hash_value = 0;
+    hash_combine(hash_value, Point(center()).hash());
+    hash_combine(hash_value, static_cast<int>(CGAL::to_double(squared_radius()) * DISTANCE_INVERSE_THRESHOLD));
+
+    return hash_value;
+}
+
+std::ostream& operator << ( std::ostream& outs, const Circle & c )
+{
+  return outs << "[" << Point(c.center()) << ", " << c.squared_radius() << "]";
 }
 
 namespace Utils {
