@@ -76,6 +76,8 @@ TEST(PuzzleSolutions, Alpha4Test) {
     ASSERT_EQ(puzzle.cost(), 2.75);  // Bonus because we have the circle center
 
     Point G(0.5, 0.5);
+    ASSERT_THAT(puzzle.state.points, ::testing::Contains(G));
+    ASSERT_THAT(puzzle.state.points, ::testing::Contains(F));
     Puzzle::Action action5(Puzzle::Action::ActionType::DrawCircle, G, F);
     actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action5));

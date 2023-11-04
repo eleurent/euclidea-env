@@ -18,8 +18,6 @@ public:
     void drawLine(const Point& start, const Point& end);
     void drawCircle(const Point& center, const Point& pointOnCircle);
 
-    static Circle createCircle(const Point& center, const Point& pointOnCircle) {return Circle(center - (pointOnCircle - center), pointOnCircle);};
-
     std::unordered_set<Point> points;
     std::vector<Segment> segments;
     std::vector<Line> lines;

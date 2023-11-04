@@ -124,7 +124,7 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
 
 
 void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
-    const auto newCircle = createCircle(center, pointOnCircle);
+    const auto newCircle = Circle::fromRadius(center, pointOnCircle);
 
     for (const Segment& existingSegment : segments) {
         std::vector<Point> intersections;

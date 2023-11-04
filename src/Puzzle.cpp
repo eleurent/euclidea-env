@@ -7,8 +7,7 @@ const float MIN_DISTANCE = 0.01f;
 bool Puzzle::Action::operator==(const Puzzle::Action& other) const {
     //TODO: replace this by a custom class and whith a hash function computed based on line and its opposite
     bool sameLine = ((type == other.type == DrawLine) && ((Line(p1, p2) == Line(other.p1, other.p2)) || (Line(p1, p2) == Line(other.p1, other.p2).opposite())));
-    bool sameCircle = ((type == other.type == DrawCircle) && ((PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2)) ||
-                                                            (PuzzleState::createCircle(p1, p2) == PuzzleState::createCircle(other.p1, other.p2).opposite()))) ;
+    bool sameCircle = (type == other.type == DrawCircle) && (Circle::fromRadius(p1, p2) == Circle::fromRadius(other.p1, other.p2));
     return sameLine || sameCircle;
 }
 
@@ -40,8 +39,7 @@ float Puzzle::cost() const {
 
     // Check missing circles
     for (const auto& goalCircle : goalState.circles) {
-        if (std::find(state.circles.begin(), state.circles.end(), goalCircle) == state.circles.end() &&
-            std::find(state.circles.begin(), state.circles.end(), goalCircle.opposite()) == state.circles.end()) {
+        if (!state.circles.count(goalCircle)) {
             cost++;
 
             // Add bonus for construction points: center
@@ -79,17 +77,14 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
             }
         }
     }
-    std::vector<Circle> addedCircles;
-    addedCircles.assign(state.circles.begin(), state.circles.end());  
+    std::unordered_set<Circle> addedCircles = state.circles;
     for (const Point& p1 : state.points) {
         for (const Point& p2 : state.points) {
             if (CGAL::squared_distance(p1, p2) < MIN_DISTANCE)
                 continue;
-            Circle& circle = PuzzleState::createCircle(p1, p2);
-            if (std::find(addedCircles.begin(), addedCircles.end(), circle) == addedCircles.end() &&
-                std::find(addedCircles.begin(), addedCircles.end(), circle.opposite()) == addedCircles.end() &&
-                p1 != p2) {
-                addedCircles.push_back(circle);
+            Circle& circle = Circle::fromRadius(p1, p2);
+            if (!addedCircles.count(circle) && p1 != p2) {
+                addedCircles.insert(circle);
                 actions.push_back({ Action::DrawCircle, p1, p2 });
             }
         }
@@ -141,7 +136,7 @@ Puzzle alpha4_circle_in_square() {
     Point A(0, 0), B(1, 0), C(1, 1), D(0, 1);
     const PuzzleState initialState({A, B, C, D}, {Segment(A, B), Segment(B, C), Segment(C, D), Segment(D, A)}, {}, {});
     Point E(0.5, 0.5), F(1, 0.5), G(0, 0.5), H(0.5, 0), I(0.5, 1);
-    const PuzzleState goalState({E, F, G, H, I}, {}, {}, {PuzzleState::createCircle(E, F)});
+    const PuzzleState goalState({E, F, G, H, I}, {}, {}, {Circle::fromRadius(E, F)});
     const int optimalDepth = 5;
     return Puzzle(initialState, goalState, optimalDepth);
 }
@@ -164,7 +159,7 @@ Puzzle alpha4_circle_in_square() {
 
 Puzzle alpha6_circle_centre() {
     Point A(0, 0), B(1, 0);
-    const PuzzleState initialState({}, {}, {}, {PuzzleState::createCircle(A, B)});
+    const PuzzleState initialState({}, {}, {}, {Circle::fromRadius(A, B)});
     const PuzzleState goalState({A}, {}, {}, {});
     const int optimalDepth = 5;
     return Puzzle(initialState, goalState, optimalDepth);
@@ -172,7 +167,7 @@ Puzzle alpha6_circle_centre() {
 
 Puzzle alpha7_inscribed_square() {
     Point A(0, 0), B(0, 1);
-    const PuzzleState initialState({A, B}, {}, {}, {PuzzleState::createCircle(A, B)});
+    const PuzzleState initialState({A, B}, {}, {}, {Circle::fromRadius(A, B)});
     Point C(1, 0), D(0, -1), E(-1, 0);
     const PuzzleState goalState({C, D, E}, {}, {Line(B, C), Line(C, D), Line(D, E), Line(E, B)}, {});
     const int optimalDepth = 7;
@@ -225,7 +220,7 @@ Puzzle alpha7_inscribed_square() {
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
     Point C(0.6, 1.33), D(1.26, 0.58);
-    const PuzzleState initialState({A, B}, {}, {}, {PuzzleState::createCircle(A, B)});
+    const PuzzleState initialState({A, B}, {}, {}, {Circle::fromRadius(A, B)});
     Point E(1, 1);
     const PuzzleState goalState({}, {}, {Line(B, E)}, {});
     const int optimalDepth = 3;

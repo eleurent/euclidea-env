@@ -22,6 +22,11 @@ std::ostream& operator << ( std::ostream& outs, const Point & p )
   return outs << "(" <<  CGAL::to_double(p.x()) << "," << CGAL::to_double(p.y()) << ")";
 }
 
+
+Circle Circle::fromRadius(const Point& center, const Point& pointOnCircle) {
+  return Circle(center - (pointOnCircle - center), pointOnCircle);
+};
+
 bool Circle::operator==(const Circle& other) const {
     return hash() == other.hash();
 }

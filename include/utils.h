@@ -47,6 +47,7 @@ public:
     Circle(Point x, Point y) : Kernel::Circle_2(x, y) {}
     Circle(Kernel::Circle_2 p) : Kernel::Circle_2(p) {}
     Circle() : Kernel::Circle_2() {}
+    static Circle fromRadius(const Point& center, const Point& pointOnCircle);
     bool operator==(const Circle& other) const;
     std::size_t hash() const;
 };
@@ -59,7 +60,7 @@ namespace std {
         }
     };
 };
-std::ostream& operator << ( std::ostream& outs, const Point & p );
+std::ostream& operator << ( std::ostream& outs, const Circle & c );
 
 
 namespace Utils
