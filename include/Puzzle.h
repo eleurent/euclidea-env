@@ -17,7 +17,7 @@ public:
         const PuzzleState& initialState,
         const PuzzleState& goalState,
         const int optimalDepth
-    ) : state(initialState), goalState(goalState), optimalDepth(optimalDepth) {}
+    ) : state(initialState), goalState(goalState), optimalDepth(optimalDepth), enableRandomPoints(false) {}
     float cost() const;
     std::vector<Action> availableActions() const;
     Puzzle applyAction(const Action& action) const;
@@ -39,3 +39,4 @@ Puzzle alpha7_inscribed_square();
 Puzzle beta1_bisector();
 Puzzle beta2_bisectors_centre();
 Puzzle beta8_tangent_to_line_at_point();
+Puzzle gamma8_diamond();

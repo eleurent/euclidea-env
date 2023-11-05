@@ -79,7 +79,26 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
         }
         if (enableRandomPoints) {
             // Random points
+            const Point p(0.123, 0.456);
+            if (p1 != p) {
+                Line line(p1, p);
+                if (!addedLines.count(line)) {
+                    actions.push_back({ Action::DrawLine, p1, p });
+                    addedLines.insert(line);
+                }
+                Circle circle = Circle::fromRadius(p1, p);
+                if (!addedCircles.count(circle) ) {
+                    actions.push_back({ Action::DrawCircle, p1, p });
+                    addedCircles.insert(circle);
+                }
+                circle = Circle::fromRadius(p, p1);
+                if (!addedCircles.count(circle)) {
+                    actions.push_back({ Action::DrawCircle, p, p1 });
+                    addedCircles.insert(circle);
+                }
+            }
             for (const auto& existingSegment: state.segments) {
+                if (state.lines.count(Line(existingSegment.start(), existingSegment.end()))) continue;
                 const Point p = existingSegment.start() + 0.123 * (existingSegment.end() - existingSegment.start());
                 if (p1 == p) continue;
                 Line line(p1, p);
@@ -158,7 +177,7 @@ Puzzle alpha0_equilateral_triangle() {
     Point A(0, 0), B(1, 0), C(0.5, sqrt(3)/2);
     const PuzzleState initialState({A, B}, {Segment(A, B)}, {}, {});
     const PuzzleState goalState({C}, {}, {Line(A, C), Line(B, C)}, {});
-    const int optimalDepth = 3;
+    const int optimalDepth = 4;
     return Puzzle(initialState, goalState, optimalDepth);
 }
 
@@ -285,5 +304,18 @@ Puzzle beta8_tangent_to_line_at_point() {
     Point E(1, 1);
     const PuzzleState goalState({}, {}, {Line(B, E)}, {});
     const int optimalDepth = 3;
-    return Puzzle(initialState, goalState, optimalDepth);
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.enableRandomPoints = true;
+    return puzzle;
+}
+
+Puzzle gamma8_diamond() {
+    Point A(0, 0), B(1, 0);
+    Point C(std::sqrt(2), std::sqrt(2)), D(1 + std::sqrt(2), std::sqrt(2));
+    const PuzzleState initialState({A, B}, {}, {}, {});
+    const PuzzleState goalState({C, D}, {}, {Line(B, C), Line(C, D), Line(D, B)}, {});
+    const int optimalDepth = 7;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.enableRandomPoints = true;
+    return puzzle;
 }
