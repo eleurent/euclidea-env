@@ -77,6 +77,66 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
                 addedCircles.insert(circle);
             }
         }
+        if (enableRandomPoints) {
+            // Random points
+            for (const auto& existingSegment: state.segments) {
+                const Point p = existingSegment.start() + 0.123 * (existingSegment.end() - existingSegment.start());
+                if (p1 == p) continue;
+                Line line(p1, p);
+                if (!addedLines.count(line)) {
+                    actions.push_back({ Action::DrawLine, p1, p });
+                    addedLines.insert(line);
+                }
+                Circle circle = Circle::fromRadius(p1, p);
+                if (!addedCircles.count(circle) ) {
+                    actions.push_back({ Action::DrawCircle, p1, p });
+                    addedCircles.insert(circle);
+                }
+                circle = Circle::fromRadius(p, p1);
+                if (!addedCircles.count(circle)) {
+                    actions.push_back({ Action::DrawCircle, p, p1 });
+                    addedCircles.insert(circle);
+                }
+            }
+            for (const auto& existingLine: state.lines) {
+                const Point p = existingLine.randomPoint();
+                if (p1 == p) continue;
+                Line line(p1, p);
+                if (!addedLines.count(line)) {
+                    actions.push_back({ Action::DrawLine, p1, p });
+                    addedLines.insert(line);
+                }
+                Circle circle = Circle::fromRadius(p1, p);
+                if (!addedCircles.count(circle) ) {
+                    actions.push_back({ Action::DrawCircle, p1, p });
+                    addedCircles.insert(circle);
+                }
+                circle = Circle::fromRadius(p, p1);
+                if (!addedCircles.count(circle)) {
+                    actions.push_back({ Action::DrawCircle, p, p1 });
+                    addedCircles.insert(circle);
+                }
+            }
+            for (const auto& existingCircle: state.circles) {
+                const Point& p = existingCircle.randomPoint();
+                if (p1 == p) continue;
+                Line line(p1, p);
+                if (!addedLines.count(line)) {
+                    actions.push_back({ Action::DrawLine, p1, p });
+                    addedLines.insert(line);
+                }
+                Circle circle = Circle::fromRadius(p1, p);
+                if (!addedCircles.count(circle) ) {
+                    actions.push_back({ Action::DrawCircle, p1, p });
+                    addedCircles.insert(circle);
+                }
+                circle = Circle::fromRadius(p, p1);
+                if (!addedCircles.count(circle)) {
+                    actions.push_back({ Action::DrawCircle, p, p1 });
+                    addedCircles.insert(circle);
+                }
+            }
+        }
     }
     return actions;
 }

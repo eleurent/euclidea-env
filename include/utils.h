@@ -7,10 +7,7 @@
 #include <CGAL/Circular_kernel_intersections.h>
 
 using Kernel = CGAL::Exact_circular_kernel_2;
-// using Point = Kernel::Point_2;
 using Segment = Kernel::Segment_2;
-// using Line = Kernel::Line_2;
-// using Circle = Kernel::Circle_2;
 using Circular_arc_point = Kernel::Circular_arc_point_2;
 
 
@@ -83,6 +80,12 @@ public:
     static Circle fromRadius(const Point& center, const Point& pointOnCircle);
     std::size_t hash() const;
     bool operator==(const Circle& other) const;
+    Point randomPoint() const {
+        const Point reference(0.1, -0.5);
+        Kernel::Vector_2 delta = reference - center();
+        const Point point = center() + std::sqrt(CGAL::to_double(squared_radius())) * delta / std::sqrt(CGAL::to_double(delta.squared_length()));
+        return point;
+    }
 };
 
 namespace std {
@@ -105,6 +108,10 @@ public:
     Line() : Kernel::Line_2() {}
     std::size_t hash() const;
     bool operator==(const Line& other) const;
+    Point randomPoint() const {
+        const Point reference(0.567, 0.890);
+        return Point(projection(reference));
+    }
 };
 
 namespace std {

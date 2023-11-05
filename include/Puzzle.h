@@ -24,6 +24,7 @@ public:
 
     PuzzleState state;
     int optimalDepth;
+    bool enableRandomPoints;
 private:
     PuzzleState goalState;
 };

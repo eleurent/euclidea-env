@@ -98,6 +98,9 @@ bool PuzzleState::findCircleIntersections(const Circle& circle1, const Circle& c
 void PuzzleState::drawLine(const Point& start, const Point& end) {
     Line newLine(start, end);
 
+    points.insert(start);
+    points.insert(end);
+
     for (const Segment& existingSegment : segments) {
         Point intersection;
         if (findLineIntersection(newLine, existingSegment, intersection)) {
@@ -128,6 +131,9 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
 
 void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
     const auto newCircle = Circle::fromRadius(center, pointOnCircle);
+    
+    points.insert(center);
+    points.insert(pointOnCircle);
 
     for (const Segment& existingSegment : segments) {
         std::vector<Point> intersections;

@@ -6,8 +6,6 @@
 TEST(Puzzle, StepPuzzle) {
     Puzzle& puzzle = alpha0_equilateral_triangle();
     auto& actions = puzzle.availableActions();
-    for (auto& action: actions)
-        std::cout << action.type << " " << action.p1 << " " << action.p2 << std::endl;
     ASSERT_EQ(actions.size(), 3);
     Puzzle& newPuzzle = puzzle.applyAction(actions[0]);
     ASSERT_NE(puzzle.state.lines, newPuzzle.state.lines);
@@ -106,4 +104,31 @@ TEST(PuzzleSolutions, Alpha4Test) {
     ASSERT_THAT(actions, ::testing::Contains(action5));
     puzzle = puzzle.applyAction(action5);
     ASSERT_EQ(puzzle.cost(), 0);
+}
+
+
+TEST(PuzzleSolutions, Beta8Test) {
+    Puzzle& puzzle = beta8_tangent_to_line_at_point();
+    ASSERT_EQ(puzzle.cost(), 0.75);
+
+    auto& actions = puzzle.availableActions();
+    for (auto& action: actions) {
+        if ((action.type == Puzzle::Action::ActionType::DrawCircle) && action.p1.y() < -0.5 && action.p2.x() > 0.9) {
+            puzzle = puzzle.applyAction(action);
+            break;
+        }
+    }
+    ASSERT_EQ(puzzle.cost(), 0.75);
+    actions = puzzle.availableActions();
+    for (auto& action: actions) {
+        if ((action.type == Puzzle::Action::ActionType::DrawCircle) && action.p1.x() > 0.9 && action.p2.x() < -0.1) {
+            puzzle = puzzle.applyAction(action);
+            break;
+        }
+    }
+    for (auto point: puzzle.state.points)
+        std::cout << point << std::endl;
+    ASSERT_EQ(puzzle.cost(), 0.5);
+
+
 }
