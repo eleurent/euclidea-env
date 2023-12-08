@@ -319,3 +319,14 @@ Puzzle gamma8_diamond() {
     puzzle.enableRandomPoints = true;
     return puzzle;
 }
+
+Puzzle delta4_equilateral_triangle_in_circle() {
+    Point A(1, 0), O(0, 0);
+    Point B(-0.5, std::sqrt(3) / 2), C(-0.5, -std::sqrt(3) / 2);
+    const PuzzleState initialState({A}, {}, {}, {Circle::fromRadius(O, A)});
+    const PuzzleState goalState({B, C}, {}, {Line(A, B), Line(A, C), Line(B, C)}, {});
+    const int optimalDepth = 6;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.enableRandomPoints = true;
+    return puzzle;
+}

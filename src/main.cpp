@@ -17,7 +17,7 @@ int main()
             // beta1_bisector(),
             // beta2_bisectors_centre(),
             // beta8_tangent_to_line_at_point(),
-            gamma8_diamond()
+            delta4_equilateral_triangle_in_circle()
         }) {
         const int maxIterations = 10000;
         const auto& bestPath = aStarSearch(puzzle, maxIterations, puzzle.optimalDepth+1, puzzle.optimalDepth);

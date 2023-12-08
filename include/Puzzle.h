@@ -40,3 +40,4 @@ Puzzle beta1_bisector();
 Puzzle beta2_bisectors_centre();
 Puzzle beta8_tangent_to_line_at_point();
 Puzzle gamma8_diamond();
+Puzzle delta4_equilateral_triangle_in_circle();
