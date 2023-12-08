@@ -17,14 +17,16 @@ public:
         const PuzzleState& initialState,
         const PuzzleState& goalState,
         const int optimalDepth
-    ) : state(initialState), goalState(goalState), optimalDepth(optimalDepth), enableRandomPoints(false) {}
+    ) : state(initialState), goalState(goalState), depth(0), optimalDepth(optimalDepth), enableRandomPoints(false) {}
     float cost() const;
     std::vector<Action> availableActions() const;
     Puzzle applyAction(const Action& action) const;
 
     PuzzleState state;
+    int depth;
     int optimalDepth;
     bool enableRandomPoints;
+    std::vector<Action::ActionType> actionsClue;
 private:
     PuzzleState goalState;
 };

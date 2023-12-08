@@ -19,7 +19,7 @@ int main()
             // beta8_tangent_to_line_at_point(),
             delta4_equilateral_triangle_in_circle()
         }) {
-        const int maxIterations = 10000;
+        const int maxIterations = 500;
         const auto& bestPath = aStarSearch(puzzle, maxIterations, puzzle.optimalDepth+1, puzzle.optimalDepth);
         std::cout << "Found cost " << bestPath.first.cost() << " in " << bestPath.second.size() << " actions" << ((bestPath.second.size() == puzzle.optimalDepth) ? ", optimal!" : ".") << std::endl;
         for (const auto& action: bestPath.second) { 

@@ -157,6 +157,15 @@ std::vector<Puzzle::Action> Puzzle::availableActions() const {
             }
         }
     }
+    std::vector<Action> filteredActions;
+    if (actionsClue.size() && depth < actionsClue.size()) {
+        for (const Action& action : actions) {
+            if (action.type == actionsClue[depth]) {
+                filteredActions.push_back(action);
+            }
+        }
+        actions = filteredActions;
+    }
     return actions;
 }
 
@@ -170,6 +179,7 @@ Puzzle Puzzle::applyAction(const Action& action) const {
             puzzle.state.drawCircle(action.p1, action.p2);
             break;
     }
+    puzzle.depth++;
     return puzzle;
 }
 
@@ -328,5 +338,13 @@ Puzzle delta4_equilateral_triangle_in_circle() {
     const int optimalDepth = 6;
     Puzzle puzzle(initialState, goalState, optimalDepth);
     puzzle.enableRandomPoints = true;
+    puzzle.actionsClue = {
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle, //
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+    };
     return puzzle;
 }
