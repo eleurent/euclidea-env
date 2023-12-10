@@ -52,7 +52,7 @@ std::size_t Line::hash() const {
     double cn = CGAL::to_double(c());
     // Canonized norm
     //TODO: handle degenerate lines?
-    double norm = an+bn+cn;
+    double norm = std::sqrt(an*an+bn*bn+cn*cn);
     an /= norm;
     bn /= norm;
     cn /= norm;
