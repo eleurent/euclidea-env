@@ -347,6 +347,24 @@ Puzzle gamma8_diamond() {
     return puzzle;
 }
 
+Puzzle delta2_60deg_angle() {
+    Point A(0, 0), B(100, 0);
+    Point C(1, std::sqrt(3));
+    Point D(1, 0);
+    const PuzzleState initialState({C}, {}, {Line(A, B)}, {});
+    const PuzzleState goalState({A}, {}, {Line(A, C)}, {});
+    const int optimalDepth = 4;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.enableRandomPoints = true;
+    puzzle.actionsClue = {
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawLine,
+    };
+    return puzzle;
+}
+
 Puzzle delta4_equilateral_triangle_in_circle() {
     Point A(1, 0), O(0, 0);
     Point B(-0.5, std::sqrt(3) / 2), C(-0.5, -std::sqrt(3) / 2);
@@ -390,7 +408,7 @@ Puzzle delta9_square_from_opposite_middles() {
 
     const PuzzleState initialState({E, F, G}, {}, {}, {});
     const PuzzleState goalState({A, B, C, D}, {}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
-    const int optimalDepth = 10;
+    const int optimalDepth =  10;
     Puzzle puzzle(initialState, goalState, optimalDepth);
     puzzle.actionsClue = {
         Puzzle::Action::DrawCircle,

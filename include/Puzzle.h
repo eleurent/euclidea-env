@@ -43,6 +43,7 @@ Puzzle beta2_bisectors_centre();
 Puzzle beta3_30deg_angle();
 Puzzle beta8_tangent_to_line_at_point();
 Puzzle gamma8_diamond();
+Puzzle delta2_60deg_angle();
 Puzzle delta4_equilateral_triangle_in_circle();
 Puzzle delta8_15deg_angle();
 Puzzle delta9_square_from_opposite_middles();
