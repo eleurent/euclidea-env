@@ -131,6 +131,8 @@ void PuzzleState::drawLine(const Point& start, const Point& end) {
 
 void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
     const auto newCircle = Circle::fromRadius(center, pointOnCircle);
+    if (!center.isValid() || !pointOnCircle.isValid())
+        return;
     
     points.insert(center);
     points.insert(pointOnCircle);
