@@ -97,13 +97,44 @@ TEST(PuzzleSolutions, Alpha4Test) {
     ASSERT_EQ(puzzle.cost(), 2.75);  // Bonus because we have the circle center
 
     Point G(0.5, 0.5);
-    ASSERT_THAT(puzzle.state.points, ::testing::Contains(G));
+    ASSERT_THAT(puzzle.state.points, ::testing::Contains(G)); 
     ASSERT_THAT(puzzle.state.points, ::testing::Contains(F));
     Puzzle::Action action5(Puzzle::Action::ActionType::DrawCircle, G, F);
     actions = puzzle.availableActions();
     ASSERT_THAT(actions, ::testing::Contains(action5));
     puzzle = puzzle.applyAction(action5);
     ASSERT_EQ(puzzle.cost(), 0);
+}
+
+
+TEST(PuzzleSolutions, Beta3Test) {
+    Puzzle& puzzle = beta3_30deg_angle();
+
+    auto& actions = puzzle.availableActions();
+    for (auto& action: actions) {
+        if ((action.type == Puzzle::Action::ActionType::DrawCircle) && action.p1.x() > 0.5 && action.p2.x() < 0.5) {
+            puzzle = puzzle.applyAction(action);
+            break;
+        }
+    }
+
+    actions = puzzle.availableActions();
+    for (auto& action: actions) {
+        if ((action.type == Puzzle::Action::ActionType::DrawCircle) && action.p1.x() > 1.5 && (0.5 < action.p2.x()) && (action.p2.x()  < 1.5)) {
+            puzzle = puzzle.applyAction(action);
+            break;
+        }
+    }
+
+    actions = puzzle.availableActions();
+    for (auto& action: actions) {
+        if ((action.type == Puzzle::Action::ActionType::DrawLine) && action.p1.x() < 0.1 && action.p2.y() > 0) {
+            puzzle = puzzle.applyAction(action);
+            break;
+        }
+    }
+
+    ASSERT_EQ(puzzle.cost(), 0.0);
 }
 
 

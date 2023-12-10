@@ -22,7 +22,7 @@ float Puzzle::cost() const {
 
     // Check missing lines
     for (const auto& goalLine : goalState.lines) {
-        if (!state.lines.count(goalLine)) {
+                if (!state.lines.count(goalLine)) {
             cost++;
 
             // Add bonus for construction points (but not beyond 2 points)
@@ -307,6 +307,23 @@ Puzzle beta2_bisectors_centre() {
     return Puzzle(initialState, goalState, optimalDepth);
 }
 
+Puzzle beta3_30deg_angle() {
+    Point A(0, 0), B(100, 0);
+    Point C(1, 1 / std::sqrt(3));
+    Point D(1, 0);
+    const PuzzleState initialState({A, D}, {Segment(A, B)}, {}, {});
+    const PuzzleState goalState({}, {}, {Line(A, C)}, {});
+    const int optimalDepth = 3;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.enableRandomPoints = false;
+    puzzle.actionsClue = {
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawLine,
+    };
+    return puzzle;
+}
+
 Puzzle beta8_tangent_to_line_at_point() {
     Point A(0, 0), B(1, 0);
     Point C(0.6, 1.33), D(1.26, 0.58);
@@ -344,6 +361,23 @@ Puzzle delta4_equilateral_triangle_in_circle() {
         Puzzle::Action::DrawCircle, //
         Puzzle::Action::DrawLine,
         Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+    };
+    return puzzle;
+}
+
+Puzzle delta8_15deg_angle() {
+    Point A(0, 0), B(100, 0);
+    Point C(1, 2 - std::sqrt(3));
+    Point D(1, 0);
+    const PuzzleState initialState({A, D}, {Segment(A, B)}, {}, {});
+    const PuzzleState goalState({}, {}, {Line(A, C)}, {});
+    const int optimalDepth = 4;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.actionsClue = {
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
         Puzzle::Action::DrawLine,
     };
     return puzzle;
