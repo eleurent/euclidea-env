@@ -139,7 +139,8 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingSegment, intersections)) {
             for (const auto& intersection: intersections) {
-                points.insert(intersection);
+                if (intersection.isValid())
+                    points.insert(intersection);
             }
         }
     }
@@ -148,7 +149,8 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingLine, intersections)) {
             for (const auto& intersection: intersections) {
-                points.insert(intersection);
+                if (intersection.isValid())
+                    points.insert(intersection);
             }
         }
     }
@@ -157,7 +159,8 @@ void PuzzleState::drawCircle(const Point& center, const Point& pointOnCircle) {
         std::vector<Point> intersections;
         if (findCircleIntersections(newCircle, existingCircle, intersections)) {
             for (const auto& intersection: intersections) {
-                points.insert(intersection);
+                if (intersection.isValid())
+                    points.insert(intersection);
             }
         }
     }

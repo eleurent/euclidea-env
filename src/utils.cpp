@@ -2,6 +2,7 @@
 
 const float DISTANCE_THRESHOLD = 1e-5f;
 const float DISTANCE_INVERSE_THRESHOLD = 10000;
+const float VALID_POINT_MAX_SQNORM = 400;
 
 std::size_t Point::hash() const {
     int rounded_x = static_cast<int>(CGAL::to_double(x()) * DISTANCE_INVERSE_THRESHOLD);
@@ -15,6 +16,12 @@ std::size_t Point::hash() const {
 bool Point::operator==(const Point& other) const {
     return hash() == other.hash();
 }
+
+bool Point::isValid() const {
+  double x(CGAL::to_double(x())), y(CGAL::to_double(y()));
+  return x*x + y*y < VALID_POINT_MAX_SQNORM;
+}
+
 
 std::ostream& operator << ( std::ostream& outs, const Point & p )
 {

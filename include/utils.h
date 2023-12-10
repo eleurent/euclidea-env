@@ -57,6 +57,7 @@ public:
     Point() : Kernel::Point_2() {}
     std::size_t hash() const;
     bool operator==(const Point& other) const;
+    bool isValid() const;
 };
 
 namespace std {
