@@ -45,3 +45,4 @@ Puzzle beta8_tangent_to_line_at_point();
 Puzzle gamma8_diamond();
 Puzzle delta4_equilateral_triangle_in_circle();
 Puzzle delta8_15deg_angle();
+Puzzle delta9_square_from_opposite_middles();

@@ -382,3 +382,29 @@ Puzzle delta8_15deg_angle() {
     };
     return puzzle;
 }
+
+Puzzle delta9_square_from_opposite_middles() {
+    Point A(-1, 0), B(0, 1), C(1, 0), D(0, -1);
+    Point E(CGAL::midpoint(A, D)), F(CGAL::midpoint(B, C));
+    Point G(1.23, 1.45);
+
+    const PuzzleState initialState({E, F, G}, {}, {}, {});
+    const PuzzleState goalState({A, B, C, D}, {}, {Line(A, B), Line(B, C), Line(C, D), Line(D, A)}, {});
+    const int optimalDepth = 10;
+    Puzzle puzzle(initialState, goalState, optimalDepth);
+    puzzle.actionsClue = {
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawLine,
+        Puzzle::Action::DrawCircle,
+        Puzzle::Action::DrawLine,
+    };
+    puzzle.enableRandomPoints = false;
+
+    return puzzle;
+}
