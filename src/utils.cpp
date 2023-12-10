@@ -50,6 +50,12 @@ std::size_t Line::hash() const {
     double an = CGAL::to_double(a());
     double bn = CGAL::to_double(b());
     double cn = CGAL::to_double(c());
+    // Canonized norm
+    //TODO: handle degenerate lines?
+    double norm = an+bn+cn;
+    an /= norm;
+    bn /= norm;
+    cn /= norm;
     // Canonized direction, to hash this and this.opposite()
     if ((an < -DISTANCE_THRESHOLD) || ((std::abs(an) < DISTANCE_THRESHOLD) && (bn < -DISTANCE_THRESHOLD))) {
       an = -an;
@@ -65,6 +71,12 @@ std::size_t Line::hash() const {
 bool Line::operator==(const Line& other) const {
     return hash() == other.hash();
 }
+
+std::ostream& operator << ( std::ostream& outs, const Line & l)
+{
+  return outs << "(" <<  CGAL::to_double(l.a()) << "," << CGAL::to_double(l.b()) << "," << CGAL::to_double(l.c()) << ")";
+}
+
 
 namespace Utils {
   bool isOn(const Point& point, const Line& line, const float maxDistance) {

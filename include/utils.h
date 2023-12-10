@@ -113,6 +113,7 @@ public:
         return Point(projection(reference));
     }
 };
+std::ostream& operator << ( std::ostream& outs, const Line & l);
 
 namespace std {
     template <>
